@@ -1,5 +1,6 @@
 package com.jfd.stockrecipesmanagement.gui;
 
+import com.jfd.stockrecipesmanagement.dao.InventarioDAO;
 import com.jfd.stockrecipesmanagement.dao.OrdenCDAO;
 import com.jfd.stockrecipesmanagement.entities.OrdenCompra;
 import com.jfd.stockrecipesmanagement.files.OrdenCFile;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.table.DefaultTableModel;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
 import org.kordamp.ikonli.swing.FontIcon;
@@ -31,9 +33,13 @@ public class MainMenu extends javax.swing.JFrame {
     private List<String> listaOrdenCompra2 = new ArrayList<String>();
     private List<String> productoDetalle = new ArrayList<String>();
     private List<List<String>> ordenCompraDetalle = new ArrayList<>();
+    private List<List<Object>> inventario = new ArrayList<>();
     OrdenCompra orden = new OrdenCompra();
     OrdenCDAO newordenCDAO = new OrdenCDAO();
     int k_ordC;
+    
+    InventarioDAO newinventarioDAO = new InventarioDAO();
+    
     public MainMenu() {
         initComponents();
         k_ordC=0;
@@ -43,14 +49,16 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtToMainMenu1.setIcon(iconPath);
         txtButtToMainMenu2.setIcon(iconPath);
         txtButtToMainMenu3.setIcon(iconPath);
+        txtButtToMainMenu4.setIcon(iconPath);
         FontIcon iconrightarrow = FontIcon.of(MaterialDesignA.ARROW_RIGHT_CIRCLE_OUTLINE);
         iconrightarrow.setIconSize(30);
         txtIconNextArrow.setIcon(iconrightarrow);
         txtIconNextArrow1.setIcon(iconrightarrow);
         txtIconNextArrow2.setIcon(iconrightarrow);
         
-        //set Orden de compra Status , Date & Numero
         
+        inventario = newinventarioDAO.consultarInventario();
+
 
     }
 
@@ -157,6 +165,13 @@ public class MainMenu extends javax.swing.JFrame {
         txtSubtitleObservaciones3 = new javax.swing.JLabel();
         txtSubtitleGenPDF3 = new javax.swing.JLabel();
         txtSubtitleConfirmarCompra3 = new javax.swing.JLabel();
+        cardPanelConsultInvent = new javax.swing.JPanel();
+        mainMenuCentralPanelContent1 = new javax.swing.JPanel();
+        txtButtToMainMenu4 = new javax.swing.JLabel();
+        txtPathOrdC3 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -186,6 +201,9 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtConsInvent.setText("Consultar Inventario");
         txtButtConsInvent.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtButtConsInvent.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtConsInventMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 txtButtConsInventMouseEntered(evt);
             }
@@ -1185,16 +1203,15 @@ public class MainMenu extends javax.swing.JFrame {
                                     .addGroup(labelButtConfirmarCompraLayout.createSequentialGroup()
                                         .addComponent(labelMatPrimaUnidades1)
                                         .addGap(26, 26, 26)
-                                        .addComponent(labelMatPrimaPrecioUnit1)
-                                        .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(labelMatPrimaPrecioUnit1))
                                     .addGroup(labelButtConfirmarCompraLayout.createSequentialGroup()
                                         .addComponent(textFMatPrimaUnid1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(textFMatPrimaPrecioUnit1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addComponent(textFMatPrimaPrecioUnit1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(labelButtConfirmarCompraLayout.createSequentialGroup()
                                 .addGap(96, 96, 96)
-                                .addComponent(panelListOrdCompra1, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)))
+                                .addComponent(panelListOrdCompra1, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelOrdenC1BorrarElementoListado1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(labelButtConfirmarCompraLayout.createSequentialGroup()
@@ -1265,78 +1282,112 @@ public class MainMenu extends javax.swing.JFrame {
 
         background.add(cardPanelNvaOrdC4, "card2d");
 
+        cardPanelConsultInvent.setBackground(new java.awt.Color(25, 118, 211));
+
+        mainMenuCentralPanelContent1.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtButtToMainMenu4.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtToMainMenu4.setText("Menú Principal");
+        txtButtToMainMenu4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtToMainMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu4MouseExited(evt);
+            }
+        });
+
+        txtPathOrdC3.setText("/ Consultar Inventario");
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTable1.setAutoCreateRowSorter(true);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "sku", "Categoria", "Subcategoria", "Marca", "Tipo", "Cantidad", "unidad_Cantidad"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 806, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(12, 12, 12)
+                    .addComponent(jScrollPane1)
+                    .addGap(13, 13, 13)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 427, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(10, 10, 10)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(11, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout mainMenuCentralPanelContent1Layout = new javax.swing.GroupLayout(mainMenuCentralPanelContent1);
+        mainMenuCentralPanelContent1.setLayout(mainMenuCentralPanelContent1Layout);
+        mainMenuCentralPanelContent1Layout.setHorizontalGroup(
+            mainMenuCentralPanelContent1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainMenuCentralPanelContent1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(txtButtToMainMenu4, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPathOrdC3)
+                .addGap(565, 565, 565))
+            .addGroup(mainMenuCentralPanelContent1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainMenuCentralPanelContent1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        mainMenuCentralPanelContent1Layout.setVerticalGroup(
+            mainMenuCentralPanelContent1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainMenuCentralPanelContent1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(mainMenuCentralPanelContent1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtButtToMainMenu4)
+                    .addComponent(txtPathOrdC3))
+                .addGap(552, 552, 552))
+            .addGroup(mainMenuCentralPanelContent1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainMenuCentralPanelContent1Layout.createSequentialGroup()
+                    .addContainerGap(130, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(27, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout cardPanelConsultInventLayout = new javax.swing.GroupLayout(cardPanelConsultInvent);
+        cardPanelConsultInvent.setLayout(cardPanelConsultInventLayout);
+        cardPanelConsultInventLayout.setHorizontalGroup(
+            cardPanelConsultInventLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelConsultInventLayout.createSequentialGroup()
+                .addGap(202, 202, 202)
+                .addComponent(mainMenuCentralPanelContent1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        cardPanelConsultInventLayout.setVerticalGroup(
+            cardPanelConsultInventLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainMenuCentralPanelContent1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        background.add(cardPanelConsultInvent, "card3");
+
         getContentPane().add(background, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-//-------------------MENU PRINCIPAL-----------------------------------------------------------
-    private void txtButtNuevoPedidoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNuevoPedidoMouseEntered
-        // TODO add your handling code here:
-        txtButtNuevoPedido.setForeground(new java.awt.Color(23, 132, 21));
-    }//GEN-LAST:event_txtButtNuevoPedidoMouseEntered
-
-    private void txtButtNuevoPedidoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNuevoPedidoMouseExited
-        // TODO add your handling code here:
-        txtButtNuevoPedido.setForeground(new java.awt.Color(25, 118, 211));
-    }//GEN-LAST:event_txtButtNuevoPedidoMouseExited
-
-    private void txtButtConsInventMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsInventMouseEntered
-        // TODO add your handling code here:
-        txtButtConsInvent.setForeground(new java.awt.Color(23, 132, 21));
-    }//GEN-LAST:event_txtButtConsInventMouseEntered
-
-    private void txtButtConsInventMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsInventMouseExited
-        // TODO add your handling code here:
-        txtButtConsInvent.setForeground(new java.awt.Color(25, 118, 211));
-    }//GEN-LAST:event_txtButtConsInventMouseExited
-
-    private void txtButtNvaOrdenCMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNvaOrdenCMouseEntered
-        // TODO add your handling code here:
-        txtButtNvaOrdenC.setForeground(new java.awt.Color(23, 132, 21));
-    }//GEN-LAST:event_txtButtNvaOrdenCMouseEntered
-
-    private void txtButtNvaOrdenCMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNvaOrdenCMouseExited
-        // TODO add your handling code here:
-        txtButtNvaOrdenC.setForeground(new java.awt.Color(25, 118, 211));
-    }//GEN-LAST:event_txtButtNvaOrdenCMouseExited
-
-    private void txtButtBajaStockMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtBajaStockMouseEntered
-        // TODO add your handling code here:
-        txtButtBajaStock.setForeground(new java.awt.Color(23, 132, 21));
-    }//GEN-LAST:event_txtButtBajaStockMouseEntered
-
-    private void txtButtBajaStockMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtBajaStockMouseExited
-        // TODO add your handling code here:
-        txtButtBajaStock.setForeground(new java.awt.Color(25, 118, 211));
-    }//GEN-LAST:event_txtButtBajaStockMouseExited
-
-    
-    
-    private void txtButtNvaOrdenCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNvaOrdenCMouseClicked
-        // TODO add your handling code here:
-        k_ordC=k_ordC+1;
-        card = (CardLayout) this.background.getLayout();
-        card.show(background, "card2");
-        
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = now.format(formatter1);
-        //String numeroOrden = String.format("%010d",newordenCDAO.consultarOrdenCid()+1);
-        int numeroOrden = newordenCDAO.consultarOrdenCid()+1;
-        orden.setStatus("OPEN");
-        orden.setFechaEmision(formattedDateTime);  
-        orden.setNumeroOrden(numeroOrden);
-        listaOrdenCompra.clear();
-        listaOrdenCompra2.clear();
-        ordenCompraDetalle.clear();
-        if(k_ordC>1){
-            vaciarJList(jList2);
-            vaciarJList(jList3);
-        }
-    }//GEN-LAST:event_txtButtNvaOrdenCMouseClicked
-
-    
+ 
     
     
     
@@ -1684,6 +1735,96 @@ public class MainMenu extends javax.swing.JFrame {
         
     }//GEN-LAST:event_textFOrdenCPrecioTotalActionPerformed
 
+    private void txtButtBajaStockMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtBajaStockMouseExited
+        // TODO add your handling code here:
+        txtButtBajaStock.setForeground(new java.awt.Color(25, 118, 211));
+    }//GEN-LAST:event_txtButtBajaStockMouseExited
+
+    private void txtButtBajaStockMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtBajaStockMouseEntered
+        // TODO add your handling code here:
+        txtButtBajaStock.setForeground(new java.awt.Color(23, 132, 21));
+    }//GEN-LAST:event_txtButtBajaStockMouseEntered
+
+    private void txtButtNvaOrdenCMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNvaOrdenCMouseExited
+        // TODO add your handling code here:
+        txtButtNvaOrdenC.setForeground(new java.awt.Color(25, 118, 211));
+    }//GEN-LAST:event_txtButtNvaOrdenCMouseExited
+
+    private void txtButtNvaOrdenCMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNvaOrdenCMouseEntered
+        // TODO add your handling code here:
+        txtButtNvaOrdenC.setForeground(new java.awt.Color(23, 132, 21));
+    }//GEN-LAST:event_txtButtNvaOrdenCMouseEntered
+
+    private void txtButtNvaOrdenCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNvaOrdenCMouseClicked
+        // TODO add your handling code here:
+        k_ordC=k_ordC+1;
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card2");
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = now.format(formatter1);
+        //String numeroOrden = String.format("%010d",newordenCDAO.consultarOrdenCid()+1);
+        int numeroOrden = newordenCDAO.consultarOrdenCid()+1;
+        orden.setStatus("OPEN");
+        orden.setFechaEmision(formattedDateTime);
+        orden.setNumeroOrden(numeroOrden);
+        listaOrdenCompra.clear();
+        listaOrdenCompra2.clear();
+        ordenCompraDetalle.clear();
+        if(k_ordC>1){
+            vaciarJList(jList2);
+            vaciarJList(jList3);
+        }
+    }//GEN-LAST:event_txtButtNvaOrdenCMouseClicked
+
+    private void txtButtConsInventMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsInventMouseExited
+        // TODO add your handling code here:
+        txtButtConsInvent.setForeground(new java.awt.Color(25, 118, 211));
+    }//GEN-LAST:event_txtButtConsInventMouseExited
+
+    private void txtButtConsInventMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsInventMouseEntered
+        // TODO add your handling code here:
+        txtButtConsInvent.setForeground(new java.awt.Color(23, 132, 21));
+    }//GEN-LAST:event_txtButtConsInventMouseEntered
+
+    private void txtButtNuevoPedidoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNuevoPedidoMouseExited
+        // TODO add your handling code here:
+        txtButtNuevoPedido.setForeground(new java.awt.Color(25, 118, 211));
+    }//GEN-LAST:event_txtButtNuevoPedidoMouseExited
+
+//-------------------MENU PRINCIPAL-----------------------------------------------------------
+    private void txtButtNuevoPedidoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNuevoPedidoMouseEntered
+        // TODO add your handling code here:
+        txtButtNuevoPedido.setForeground(new java.awt.Color(23, 132, 21));
+    }//GEN-LAST:event_txtButtNuevoPedidoMouseEntered
+
+    
+//-------------------CONSULTAR INVENTARIO-----------------------------------------------------------        
+    private void txtButtConsInventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsInventMouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card3");
+        
+        //System.out.println(inventario.size());
+        addRowToTable(inventario,jTable1);
+        
+    }//GEN-LAST:event_txtButtConsInventMouseClicked
+
+    private void txtButtToMainMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu4MouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card1");
+    }//GEN-LAST:event_txtButtToMainMenu4MouseClicked
+
+    private void txtButtToMainMenu4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu4MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu4MouseEntered
+
+    private void txtButtToMainMenu4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu4MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu4MouseExited
+
 
     
     
@@ -1695,6 +1836,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel background;
     private javax.swing.JPanel card1CentralPanelContent2;
     private javax.swing.JPanel card1CentralPanelContent3;
+    private javax.swing.JPanel cardPanelConsultInvent;
     private javax.swing.JPanel cardPanelMainMenu;
     private javax.swing.JPanel cardPanelNvaOrdC1;
     private javax.swing.JPanel cardPanelNvaOrdC2;
@@ -1703,7 +1845,10 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboBoxUnidades;
     private javax.swing.JList<String> jList2;
     private javax.swing.JList<String> jList3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel labelButtBorrarElemento;
     private javax.swing.JLabel labelButtCargarElemento;
     private javax.swing.JLabel labelButtCargarElemento1;
@@ -1731,6 +1876,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane listOrdenCompra;
     private javax.swing.JScrollPane listOrdenCompra1;
     private javax.swing.JPanel mainMenuCentralPanelContent;
+    private javax.swing.JPanel mainMenuCentralPanelContent1;
     private javax.swing.JPanel nvaOrdC1CentralContentPanel;
     private javax.swing.JPanel panelListOrdCompra;
     private javax.swing.JPanel panelListOrdCompra1;
@@ -1759,11 +1905,13 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel txtButtToMainMenu1;
     private javax.swing.JLabel txtButtToMainMenu2;
     private javax.swing.JLabel txtButtToMainMenu3;
+    private javax.swing.JLabel txtButtToMainMenu4;
     private javax.swing.JLabel txtIconNextArrow;
     private javax.swing.JLabel txtIconNextArrow1;
     private javax.swing.JLabel txtIconNextArrow2;
     private javax.swing.JLabel txtPathOrdC1;
     private javax.swing.JLabel txtPathOrdC2;
+    private javax.swing.JLabel txtPathOrdC3;
     private javax.swing.JLabel txtPathOrdCDetalles1;
     private javax.swing.JLabel txtPathOrdCDetalles2;
     private javax.swing.JLabel txtSubtitleConfirmarCompra;
@@ -1855,11 +2003,18 @@ public class MainMenu extends javax.swing.JFrame {
             textFMatPrimaUnid1.setText(elemento.get(6));
             //textFMatPrimaUnid1.setText(elemento.get(5));
             textFMatPrimaPrecioUnit1.setText(elemento.get(8));
-            
         }
-        
-        
+    }    
+    private void addRowToTable(List<List<Object>> listaMadre ,javax.swing.JTable jTabla ){
+        DefaultTableModel model = (DefaultTableModel) jTabla.getModel();
+        for (List<Object> listaHija : listaMadre) {
+            // Convierte la lista hija en un array para agregarlo como fila
+            Object[] fila = listaHija.toArray(new Object[0]);
+            model.addRow(fila);
+        }
     }
+ 
+    
     
      
 }
