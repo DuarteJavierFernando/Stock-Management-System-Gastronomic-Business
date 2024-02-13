@@ -24,9 +24,9 @@ public class InventarioDAO {
          cx = new Conexion();
     }
     
-        public List<List<Object>> consultarInventario() {
+        public List<List<String>> consultarInventario() {
         try {
-            List<List<Object>> listaMadre = new ArrayList<>();
+            List<List<String>> listaMadre = new ArrayList<>();
             
             // Establece la conexión
             // Crea la consulta SQL para seleccionar todos los registros de la tabla Usuarios
@@ -46,13 +46,13 @@ public class InventarioDAO {
                 Float cantidad = rs.getFloat("cantidad");  //cantidad
                 String unidad = rs.getString("unidad_cantidad");  //unidad_cantidad
                 //System.out.println(sku);
-                listaMadre.add(new ArrayList<Object>());
+                listaMadre.add(new ArrayList<String>());
                 listaMadre.get(listaMadre.size() - 1).add(sku);
                 listaMadre.get(listaMadre.size() - 1).add(categoria);
                 listaMadre.get(listaMadre.size() - 1).add(subcategoria);
                 listaMadre.get(listaMadre.size() - 1).add(marca);
                 listaMadre.get(listaMadre.size() - 1).add(tipo);
-                listaMadre.get(listaMadre.size() - 1).add(cantidad);
+                listaMadre.get(listaMadre.size() - 1).add(String.valueOf(cantidad));
                 listaMadre.get(listaMadre.size() - 1).add(unidad);
             // Cierra la conexión
             }

@@ -33,7 +33,7 @@ public class MainMenu extends javax.swing.JFrame {
     private List<String> listaOrdenCompra2 = new ArrayList<String>();
     private List<String> productoDetalle = new ArrayList<String>();
     private List<List<String>> ordenCompraDetalle = new ArrayList<>();
-    private List<List<Object>> inventario = new ArrayList<>();
+    private List<List<String>> inventario = new ArrayList<>();
     OrdenCompra orden = new OrdenCompra();
     OrdenCDAO newordenCDAO = new OrdenCDAO();
     int k_ordC;
@@ -50,6 +50,7 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtToMainMenu2.setIcon(iconPath);
         txtButtToMainMenu3.setIcon(iconPath);
         txtButtToMainMenu4.setIcon(iconPath);
+        txtButtToMainMenu5.setIcon(iconPath);
         FontIcon iconrightarrow = FontIcon.of(MaterialDesignA.ARROW_RIGHT_CIRCLE_OUTLINE);
         iconrightarrow.setIconSize(30);
         txtIconNextArrow.setIcon(iconrightarrow);
@@ -79,6 +80,7 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtNvaOrdenC = new javax.swing.JLabel();
         txtButtBajaStock = new javax.swing.JLabel();
         txtBienvenido = new javax.swing.JLabel();
+        txtButtCargarRecetaNueva = new javax.swing.JLabel();
         cardPanelNvaOrdC1 = new javax.swing.JPanel();
         nvaOrdC1CentralContentPanel = new javax.swing.JPanel();
         txtButtToMainMenu = new javax.swing.JLabel();
@@ -172,6 +174,29 @@ public class MainMenu extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        cardPanelBajaProducto = new javax.swing.JPanel();
+        nvaOrdC1CentralContentPanel1 = new javax.swing.JPanel();
+        txtButtToMainMenu5 = new javax.swing.JLabel();
+        txtPathOrdC4 = new javax.swing.JLabel();
+        txtIconNextArrow3 = new javax.swing.JLabel();
+        textFMatPrimaCateg2 = new javax.swing.JTextField();
+        labelMatPrimaCateg2 = new javax.swing.JLabel();
+        labelMatPrimaSubcateg2 = new javax.swing.JLabel();
+        labelMatPrimaMarca2 = new javax.swing.JLabel();
+        labelMatPrimaTipo2 = new javax.swing.JLabel();
+        labelMatPrimaCantid2 = new javax.swing.JLabel();
+        labelMatPrimaUnidades2 = new javax.swing.JLabel();
+        textFMatPrimaSubcateg2 = new javax.swing.JTextField();
+        textFMatPrimaMarca2 = new javax.swing.JTextField();
+        textFMatPrimaTipo2 = new javax.swing.JTextField();
+        textFMatPrimaCantid2 = new javax.swing.JTextField();
+        panelListOrdCompra2 = new javax.swing.JPanel();
+        listOrdenCompra2 = new javax.swing.JScrollPane();
+        jList4 = new javax.swing.JList<>();
+        comboBoxUnidades1 = new javax.swing.JComboBox<>();
+        labelButtCargarElemento2 = new javax.swing.JLabel();
+        panelOrdenC1BorrarElementoListado2 = new javax.swing.JPanel();
+        labelButtBorrarElemento1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -233,6 +258,9 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtBajaStock.setText("Baja de Stock");
         txtButtBajaStock.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtButtBajaStock.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtBajaStockMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 txtButtBajaStockMouseEntered(evt);
             }
@@ -245,26 +273,42 @@ public class MainMenu extends javax.swing.JFrame {
         txtBienvenido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtBienvenido.setText("Bienvenido");
 
+        txtButtCargarRecetaNueva.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtButtCargarRecetaNueva.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtCargarRecetaNueva.setText("Cargar Receta Nueva");
+        txtButtCargarRecetaNueva.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtCargarRecetaNueva.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtCargarRecetaNuevaMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtCargarRecetaNuevaMouseExited(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainMenuCentralPanelContentLayout = new javax.swing.GroupLayout(mainMenuCentralPanelContent);
         mainMenuCentralPanelContent.setLayout(mainMenuCentralPanelContentLayout);
         mainMenuCentralPanelContentLayout.setHorizontalGroup(
             mainMenuCentralPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainMenuCentralPanelContentLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(281, Short.MAX_VALUE)
                 .addGroup(mainMenuCentralPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtButtCargarRecetaNueva, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtButtConsInvent)
                     .addComponent(txtButtNuevoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtButtNvaOrdenC)
                     .addComponent(txtButtBajaStock)
                     .addComponent(txtBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(281, Short.MAX_VALUE))
         );
         mainMenuCentralPanelContentLayout.setVerticalGroup(
             mainMenuCentralPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainMenuCentralPanelContentLayout.createSequentialGroup()
                 .addContainerGap(167, Short.MAX_VALUE)
                 .addComponent(txtBienvenido)
-                .addGap(44, 44, 44)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtButtCargarRecetaNueva)
+                .addGap(18, 18, 18)
                 .addComponent(txtButtNuevoPedido)
                 .addGap(18, 18, 18)
                 .addComponent(txtButtConsInvent)
@@ -1383,6 +1427,268 @@ public class MainMenu extends javax.swing.JFrame {
 
         background.add(cardPanelConsultInvent, "card3");
 
+        cardPanelBajaProducto.setBackground(new java.awt.Color(25, 118, 211));
+
+        nvaOrdC1CentralContentPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtButtToMainMenu5.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtToMainMenu5.setText("Menú Principal");
+        txtButtToMainMenu5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtToMainMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu5MouseExited(evt);
+            }
+        });
+
+        txtPathOrdC4.setText("/Baja de Stock");
+
+        txtIconNextArrow3.setText(" ");
+        txtIconNextArrow3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtIconNextArrow3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtIconNextArrow3MouseClicked(evt);
+            }
+        });
+
+        textFMatPrimaCateg2.setForeground(new java.awt.Color(204, 204, 204));
+        textFMatPrimaCateg2.setText("-");
+        textFMatPrimaCateg2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        textFMatPrimaCateg2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFMatPrimaCateg2MousePressed(evt);
+            }
+        });
+        textFMatPrimaCateg2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFMatPrimaCateg2ActionPerformed(evt);
+            }
+        });
+
+        labelMatPrimaCateg2.setText("Categoría");
+
+        labelMatPrimaSubcateg2.setText("Subcategoría");
+
+        labelMatPrimaMarca2.setText("Marca");
+
+        labelMatPrimaTipo2.setText("Tipo");
+
+        labelMatPrimaCantid2.setText("Cantidad");
+
+        labelMatPrimaUnidades2.setText("Unidades");
+
+        textFMatPrimaSubcateg2.setForeground(new java.awt.Color(204, 204, 204));
+        textFMatPrimaSubcateg2.setText("-");
+        textFMatPrimaSubcateg2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFMatPrimaSubcateg2MousePressed(evt);
+            }
+        });
+        textFMatPrimaSubcateg2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFMatPrimaSubcateg2ActionPerformed(evt);
+            }
+        });
+
+        textFMatPrimaMarca2.setForeground(new java.awt.Color(204, 204, 204));
+        textFMatPrimaMarca2.setText("-");
+        textFMatPrimaMarca2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFMatPrimaMarca2MousePressed(evt);
+            }
+        });
+
+        textFMatPrimaTipo2.setForeground(new java.awt.Color(204, 204, 204));
+        textFMatPrimaTipo2.setText("-");
+        textFMatPrimaTipo2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFMatPrimaTipo2MousePressed(evt);
+            }
+        });
+        textFMatPrimaTipo2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFMatPrimaTipo2ActionPerformed(evt);
+            }
+        });
+
+        textFMatPrimaCantid2.setForeground(new java.awt.Color(204, 204, 204));
+        textFMatPrimaCantid2.setText("-");
+        textFMatPrimaCantid2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFMatPrimaCantid2MousePressed(evt);
+            }
+        });
+
+        panelListOrdCompra2.setLayout(new java.awt.BorderLayout());
+
+        jList4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList4.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "sus productos aparecerán aquí" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList4.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList4.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList4.setVisibleRowCount(15);
+        listOrdenCompra2.setViewportView(jList4);
+
+        panelListOrdCompra2.add(listOrdenCompra2, java.awt.BorderLayout.CENTER);
+
+        comboBoxUnidades1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-", "kg", "g", "l", "ml", "u." }));
+        comboBoxUnidades1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        comboBoxUnidades1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        comboBoxUnidades1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxUnidades1ActionPerformed(evt);
+            }
+        });
+
+        labelButtCargarElemento2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtCargarElemento2.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtCargarElemento2.setText("Cargar Elemento");
+        labelButtCargarElemento2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtCargarElemento2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtCargarElemento2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtCargarElemento2MouseClicked(evt);
+            }
+        });
+
+        panelOrdenC1BorrarElementoListado2.setBackground(new java.awt.Color(255, 255, 255));
+
+        labelButtBorrarElemento1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtBorrarElemento1.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtBorrarElemento1.setText("Borrar Elemento Seleccionado");
+        labelButtBorrarElemento1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtBorrarElemento1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtBorrarElemento1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtBorrarElemento1MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelOrdenC1BorrarElementoListado2Layout = new javax.swing.GroupLayout(panelOrdenC1BorrarElementoListado2);
+        panelOrdenC1BorrarElementoListado2.setLayout(panelOrdenC1BorrarElementoListado2Layout);
+        panelOrdenC1BorrarElementoListado2Layout.setHorizontalGroup(
+            panelOrdenC1BorrarElementoListado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenC1BorrarElementoListado2Layout.createSequentialGroup()
+                .addContainerGap(125, Short.MAX_VALUE)
+                .addComponent(labelButtBorrarElemento1)
+                .addContainerGap(126, Short.MAX_VALUE))
+        );
+        panelOrdenC1BorrarElementoListado2Layout.setVerticalGroup(
+            panelOrdenC1BorrarElementoListado2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(labelButtBorrarElemento1)
+        );
+
+        javax.swing.GroupLayout nvaOrdC1CentralContentPanel1Layout = new javax.swing.GroupLayout(nvaOrdC1CentralContentPanel1);
+        nvaOrdC1CentralContentPanel1.setLayout(nvaOrdC1CentralContentPanel1Layout);
+        nvaOrdC1CentralContentPanel1Layout.setHorizontalGroup(
+            nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(txtButtToMainMenu5, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPathOrdC4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelMatPrimaCateg2)
+                            .addComponent(labelMatPrimaSubcateg2)
+                            .addComponent(labelMatPrimaMarca2)
+                            .addComponent(labelMatPrimaCantid2)
+                            .addComponent(labelMatPrimaTipo2)
+                            .addComponent(labelMatPrimaUnidades2))
+                        .addGap(111, 111, 111)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(textFMatPrimaTipo2)
+                            .addComponent(textFMatPrimaCantid2)
+                            .addComponent(comboBoxUnidades1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(textFMatPrimaSubcateg2)
+                            .addComponent(textFMatPrimaCateg2, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                            .addComponent(textFMatPrimaMarca2)))
+                    .addGroup(nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                        .addGap(121, 121, 121)
+                        .addComponent(labelButtCargarElemento2)))
+                .addGap(16, 16, 16)
+                .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelOrdenC1BorrarElementoListado2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelListOrdCompra2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtIconNextArrow3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38))
+        );
+        nvaOrdC1CentralContentPanel1Layout.setVerticalGroup(
+            nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtButtToMainMenu5)
+                            .addComponent(txtPathOrdC4))
+                        .addGap(81, 81, 81)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textFMatPrimaCateg2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelMatPrimaCateg2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelMatPrimaSubcateg2)
+                            .addComponent(textFMatPrimaSubcateg2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelMatPrimaMarca2)
+                            .addComponent(textFMatPrimaMarca2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelMatPrimaTipo2)
+                            .addComponent(textFMatPrimaTipo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelMatPrimaCantid2)
+                            .addComponent(textFMatPrimaCantid2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(nvaOrdC1CentralContentPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboBoxUnidades1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelMatPrimaUnidades2))
+                        .addGap(18, 18, 18)
+                        .addComponent(labelButtCargarElemento2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(nvaOrdC1CentralContentPanel1Layout.createSequentialGroup()
+                        .addGap(96, 96, 96)
+                        .addComponent(panelListOrdCompra2, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrdenC1BorrarElementoListado2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(80, 80, 80)
+                .addComponent(txtIconNextArrow3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39))
+        );
+
+        javax.swing.GroupLayout cardPanelBajaProductoLayout = new javax.swing.GroupLayout(cardPanelBajaProducto);
+        cardPanelBajaProducto.setLayout(cardPanelBajaProductoLayout);
+        cardPanelBajaProductoLayout.setHorizontalGroup(
+            cardPanelBajaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelBajaProductoLayout.createSequentialGroup()
+                .addGap(210, 210, 210)
+                .addComponent(nvaOrdC1CentralContentPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        cardPanelBajaProductoLayout.setVerticalGroup(
+            cardPanelBajaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nvaOrdC1CentralContentPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        background.add(cardPanelBajaProducto, "card4");
+
         getContentPane().add(background, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -1825,6 +2131,85 @@ public class MainMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtButtToMainMenu4MouseExited
 
+    private void txtButtCargarRecetaNuevaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtCargarRecetaNuevaMouseEntered
+        // TODO add your handling code here:
+        txtButtCargarRecetaNueva.setForeground(new java.awt.Color(23, 132, 21));
+    }//GEN-LAST:event_txtButtCargarRecetaNuevaMouseEntered
+
+    private void txtButtCargarRecetaNuevaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtCargarRecetaNuevaMouseExited
+        // TODO add your handling code here:
+        txtButtCargarRecetaNueva.setForeground(new java.awt.Color(25, 118, 211));
+    }//GEN-LAST:event_txtButtCargarRecetaNuevaMouseExited
+
+    private void txtButtToMainMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu5MouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card1");
+    }//GEN-LAST:event_txtButtToMainMenu5MouseClicked
+
+    private void txtButtToMainMenu5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu5MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu5MouseEntered
+
+    private void txtButtToMainMenu5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu5MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu5MouseExited
+
+    private void txtIconNextArrow3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtIconNextArrow3MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIconNextArrow3MouseClicked
+
+    private void textFMatPrimaCateg2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFMatPrimaCateg2MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaCateg2MousePressed
+
+    private void textFMatPrimaCateg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFMatPrimaCateg2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaCateg2ActionPerformed
+
+    private void textFMatPrimaSubcateg2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFMatPrimaSubcateg2MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaSubcateg2MousePressed
+
+    private void textFMatPrimaSubcateg2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFMatPrimaSubcateg2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaSubcateg2ActionPerformed
+
+    private void textFMatPrimaMarca2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFMatPrimaMarca2MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaMarca2MousePressed
+
+    private void textFMatPrimaTipo2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFMatPrimaTipo2MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaTipo2MousePressed
+
+    private void textFMatPrimaTipo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFMatPrimaTipo2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaTipo2ActionPerformed
+
+    private void textFMatPrimaCantid2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFMatPrimaCantid2MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFMatPrimaCantid2MousePressed
+
+    private void comboBoxUnidades1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxUnidades1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxUnidades1ActionPerformed
+
+    private void labelButtCargarElemento2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtCargarElemento2MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_labelButtCargarElemento2MouseClicked
+
+    private void labelButtBorrarElemento1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtBorrarElemento1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_labelButtBorrarElemento1MouseClicked
+
+    private void txtButtBajaStockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtBajaStockMouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card4");
+        agregarAlListado(jList4,concatenarListasHijas(inventario));
+    }//GEN-LAST:event_txtButtBajaStockMouseClicked
+
 
     
     
@@ -1836,6 +2221,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel background;
     private javax.swing.JPanel card1CentralPanelContent2;
     private javax.swing.JPanel card1CentralPanelContent3;
+    private javax.swing.JPanel cardPanelBajaProducto;
     private javax.swing.JPanel cardPanelConsultInvent;
     private javax.swing.JPanel cardPanelMainMenu;
     private javax.swing.JPanel cardPanelNvaOrdC1;
@@ -1843,15 +2229,19 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel cardPanelNvaOrdC3;
     private javax.swing.JPanel cardPanelNvaOrdC4;
     private javax.swing.JComboBox<String> comboBoxUnidades;
+    private javax.swing.JComboBox<String> comboBoxUnidades1;
     private javax.swing.JList<String> jList2;
     private javax.swing.JList<String> jList3;
+    private javax.swing.JList<String> jList4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel labelButtBorrarElemento;
+    private javax.swing.JLabel labelButtBorrarElemento1;
     private javax.swing.JLabel labelButtCargarElemento;
     private javax.swing.JLabel labelButtCargarElemento1;
+    private javax.swing.JLabel labelButtCargarElemento2;
     private javax.swing.JLabel labelButtCargarObservaciones;
     private javax.swing.JPanel labelButtConfirmarCompra;
     private javax.swing.JLabel labelButtConfirmarCompra3;
@@ -1860,44 +2250,60 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel labelGeneradoCorrectamente;
     private javax.swing.JLabel labelMatPrimaCantid;
     private javax.swing.JLabel labelMatPrimaCantid1;
+    private javax.swing.JLabel labelMatPrimaCantid2;
     private javax.swing.JLabel labelMatPrimaCateg;
     private javax.swing.JLabel labelMatPrimaCateg1;
+    private javax.swing.JLabel labelMatPrimaCateg2;
     private javax.swing.JLabel labelMatPrimaMarca;
     private javax.swing.JLabel labelMatPrimaMarca1;
+    private javax.swing.JLabel labelMatPrimaMarca2;
     private javax.swing.JLabel labelMatPrimaPrecioUnit1;
     private javax.swing.JLabel labelMatPrimaSubcateg;
     private javax.swing.JLabel labelMatPrimaSubcateg1;
+    private javax.swing.JLabel labelMatPrimaSubcateg2;
     private javax.swing.JLabel labelMatPrimaTipo;
     private javax.swing.JLabel labelMatPrimaTipo1;
+    private javax.swing.JLabel labelMatPrimaTipo2;
     private javax.swing.JLabel labelMatPrimaUnidades;
     private javax.swing.JLabel labelMatPrimaUnidades1;
+    private javax.swing.JLabel labelMatPrimaUnidades2;
     private javax.swing.JLabel labelObservacCargadasCorrectamente;
     private javax.swing.JLabel labelOrdenCPrecioTotal;
     private javax.swing.JScrollPane listOrdenCompra;
     private javax.swing.JScrollPane listOrdenCompra1;
+    private javax.swing.JScrollPane listOrdenCompra2;
     private javax.swing.JPanel mainMenuCentralPanelContent;
     private javax.swing.JPanel mainMenuCentralPanelContent1;
     private javax.swing.JPanel nvaOrdC1CentralContentPanel;
+    private javax.swing.JPanel nvaOrdC1CentralContentPanel1;
     private javax.swing.JPanel panelListOrdCompra;
     private javax.swing.JPanel panelListOrdCompra1;
+    private javax.swing.JPanel panelListOrdCompra2;
     private javax.swing.JPanel panelOrdenC1BorrarElementoListado;
     private javax.swing.JPanel panelOrdenC1BorrarElementoListado1;
+    private javax.swing.JPanel panelOrdenC1BorrarElementoListado2;
     private javax.swing.JTextField textFMatPrimaCantid;
     private javax.swing.JTextField textFMatPrimaCantid1;
+    private javax.swing.JTextField textFMatPrimaCantid2;
     private javax.swing.JTextField textFMatPrimaCateg;
     private javax.swing.JTextField textFMatPrimaCateg1;
+    private javax.swing.JTextField textFMatPrimaCateg2;
     private javax.swing.JTextField textFMatPrimaMarca;
     private javax.swing.JTextField textFMatPrimaMarca1;
+    private javax.swing.JTextField textFMatPrimaMarca2;
     private javax.swing.JTextField textFMatPrimaPrecioUnit1;
     private javax.swing.JTextField textFMatPrimaSubcateg;
     private javax.swing.JTextField textFMatPrimaSubcateg1;
+    private javax.swing.JTextField textFMatPrimaSubcateg2;
     private javax.swing.JTextField textFMatPrimaTipo;
     private javax.swing.JTextField textFMatPrimaTipo1;
+    private javax.swing.JTextField textFMatPrimaTipo2;
     private javax.swing.JTextField textFMatPrimaUnid1;
     private javax.swing.JTextField textFObservations;
     private javax.swing.JTextField textFOrdenCPrecioTotal;
     private javax.swing.JLabel txtBienvenido;
     private javax.swing.JLabel txtButtBajaStock;
+    private javax.swing.JLabel txtButtCargarRecetaNueva;
     private javax.swing.JLabel txtButtConsInvent;
     private javax.swing.JLabel txtButtNuevoPedido;
     private javax.swing.JLabel txtButtNvaOrdenC;
@@ -1906,12 +2312,15 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel txtButtToMainMenu2;
     private javax.swing.JLabel txtButtToMainMenu3;
     private javax.swing.JLabel txtButtToMainMenu4;
+    private javax.swing.JLabel txtButtToMainMenu5;
     private javax.swing.JLabel txtIconNextArrow;
     private javax.swing.JLabel txtIconNextArrow1;
     private javax.swing.JLabel txtIconNextArrow2;
+    private javax.swing.JLabel txtIconNextArrow3;
     private javax.swing.JLabel txtPathOrdC1;
     private javax.swing.JLabel txtPathOrdC2;
     private javax.swing.JLabel txtPathOrdC3;
+    private javax.swing.JLabel txtPathOrdC4;
     private javax.swing.JLabel txtPathOrdCDetalles1;
     private javax.swing.JLabel txtPathOrdCDetalles2;
     private javax.swing.JLabel txtSubtitleConfirmarCompra;
@@ -2005,16 +2414,26 @@ public class MainMenu extends javax.swing.JFrame {
             textFMatPrimaPrecioUnit1.setText(elemento.get(8));
         }
     }    
-    private void addRowToTable(List<List<Object>> listaMadre ,javax.swing.JTable jTabla ){
+    private void addRowToTable(List<List<String>> listaMadre ,javax.swing.JTable jTabla ){
         DefaultTableModel model = (DefaultTableModel) jTabla.getModel();
-        for (List<Object> listaHija : listaMadre) {
+        for (List<String> listaHija : listaMadre) {
             // Convierte la lista hija en un array para agregarlo como fila
-            Object[] fila = listaHija.toArray(new Object[0]);
+            String[] fila = listaHija.toArray(new String[0]);
             model.addRow(fila);
         }
     }
  
-    
+    private List<String> concatenarListasHijas(List<List<String>> listaMadre) {
+        List<String> listaConcatenada = new ArrayList<>();
+        for (List<String> listaHija : listaMadre) {
+            // Utilizamos String.join() para concatenar los elementos de la lista hija
+            String cadenaConcatenada = String.join(" ", listaHija);
+            listaConcatenada.add(cadenaConcatenada); // Agregamos la cadena al final de la lista hija
+            System.out.println(listaConcatenada.size());
+            
+        }
+        return listaConcatenada;
+    }
     
      
 }
