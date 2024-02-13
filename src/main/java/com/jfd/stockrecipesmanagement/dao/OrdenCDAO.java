@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +40,26 @@ public class OrdenCDAO {
             Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void insertarTransaccC(OrdenCompra ordenC){
+        PreparedStatement ps = null;
+        try {
+            ps = cx.conectar().prepareStatement("INSERT INTO TransaccionesCompras (id_ordenC,sku,costo_unitario,cantidad,unidad_cantidad) VALUES (?,?,?,?,?);");
+            for (List<String> listaHija : ordenC.getDetalleProductos()) {
+                ps.setInt(1, ordenC.getNumeroOrden());
+                ps.setString(2,listaHija.get(7) ); //sku
+                ps.setString(3,listaHija.get(8) ); //costo unitario
+                ps.setString(4,listaHija.get(5) ); //cantidad
+                ps.setString(5,listaHija.get(6) ); //unidad_cantidad
+                ps.execute();
+            }   
+            System.out.println("CargaExitosa");
+            cx.desconectar();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
    
     
     public void actualizMasterMatPrimas(OrdenCompra ordenC){
@@ -65,7 +86,48 @@ public class OrdenCDAO {
     }
     
     
-    public void consultarOrdenC() {
+    public List<List<String>> consultarOrdenC() {
+        try {
+            List<List<String>> listaMadre = new ArrayList<>();
+            
+            // Establece la conexión
+            // Crea la consulta SQL para seleccionar todos los registros de la tabla Usuarios
+            String consulta = "SELECT * FROM MasterMateriasPrimas";
+            // Crea un objeto Statement
+            Statement stmt = cx.conectar().createStatement();
+            // Ejecuta la consulta
+            ResultSet rs = stmt.executeQuery(consulta);
+            // Itera a través de los resultados e imprime los datos
+            while (rs.next()) {
+            //int id = rs.getInt("id"); // Suponiendo que el campo de ID se llama "id"
+            String sku = rs.getString("sku");  //sku
+            String categoria = rs.getString("categoria");  //categoria
+            String subcategoria = rs.getString("subcategoria");  //subcategoria
+            String marca = rs.getString("marca");  //marca
+            String tipo = rs.getString("tipo");  //tipo
+            Float cantidad = rs.getFloat("cantidad");  //cantidad
+            String unidad = rs.getString("unidad_cantidad");  //unidad_cantidad
+            
+            listaMadre.add(new ArrayList<String>());
+            listaMadre.get(listaMadre.size() - 1).add(sku);
+            listaMadre.get(listaMadre.size() - 1).add(categoria);
+            listaMadre.get(listaMadre.size() - 1).add(subcategoria);
+            listaMadre.get(listaMadre.size() - 1).add(marca);
+            listaMadre.get(listaMadre.size() - 1).add(tipo);
+            listaMadre.get(listaMadre.size() - 1).add(String.valueOf(cantidad));
+            listaMadre.get(listaMadre.size() - 1).add(unidad);
+            // Cierra la conexión
+            cx.desconectar();        
+            return listaMadre;
+        }
+        } catch (SQLException ex) {
+        Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
+    public void consultarInventario() {
         try {
         // Establece la conexión
         // Crea la consulta SQL para seleccionar todos los registros de la tabla Usuarios
@@ -88,6 +150,8 @@ public class OrdenCDAO {
         Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
     
     public int consultarOrdenCid(){
         try {

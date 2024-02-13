@@ -1082,7 +1082,6 @@ public class MainMenu extends javax.swing.JFrame {
 
         labelOrdenCPrecioTotal.setText("Monto Total Gastado");
 
-        textFOrdenCPrecioTotal.setForeground(new java.awt.Color(204, 204, 204));
         textFOrdenCPrecioTotal.setText("-");
         textFOrdenCPrecioTotal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -1323,7 +1322,8 @@ public class MainMenu extends javax.swing.JFrame {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = now.format(formatter1);
-        String numeroOrden = String.format("%010d",newordenCDAO.consultarOrdenCid()+1);
+        //String numeroOrden = String.format("%010d",newordenCDAO.consultarOrdenCid()+1);
+        int numeroOrden = newordenCDAO.consultarOrdenCid()+1;
         orden.setStatus("OPEN");
         orden.setFechaEmision(formattedDateTime);  
         orden.setNumeroOrden(numeroOrden);
@@ -1389,7 +1389,8 @@ public class MainMenu extends javax.swing.JFrame {
         String cantidad = this.textFMatPrimaCantid.getText().toLowerCase();
         int indexcombobox = this.comboBoxUnidades.getSelectedIndex();
         String unidades = this.comboBoxUnidades.getItemAt(indexcombobox).toLowerCase(); 
-        String sku = categoria.toUpperCase().substring(0, 3) + "-" + subcategoria.toUpperCase().substring(0, 4) + "-"+marca.toUpperCase().substring(0, 3) + "-" + tipo.toUpperCase().substring(0, 3);
+        //String sku = categoria.toUpperCase().substring(0, 3) + "-" + subcategoria.toUpperCase().substring(0, 4) + "-"+marca.toUpperCase().substring(0, 3) + "-" + tipo.toUpperCase().substring(0, 3);
+        String sku = categoria.toUpperCase() + "-" + subcategoria.toUpperCase() + "-"+marca.toUpperCase() + "-" + tipo.toUpperCase();
         String producto = cantidad+"    "+unidades+"    "+categoria.toUpperCase()+"    "+subcategoria.toUpperCase()+"    "+marca.toUpperCase()+"    "+tipo.toUpperCase();
         String precio = "0";
         listaOrdenCompra.add(producto);
@@ -1545,7 +1546,7 @@ public class MainMenu extends javax.swing.JFrame {
     private void labelConfirmacionGeneracionPDFMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelConfirmacionGeneracionPDFMouseClicked
         // TODO add your handling code here:
         try {
-            OrdenCFile.generarOrden(orden.getFechaEmision(), orden.getNumeroOrden(), orden.getObservaciones(), orden.getDetalleProductos());
+            OrdenCFile.generarOrden(orden.getFechaEmision(),  String.format("%010d",orden.getNumeroOrden()) , orden.getObservaciones(), orden.getDetalleProductos());
         } catch (IOException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1615,21 +1616,22 @@ public class MainMenu extends javax.swing.JFrame {
         String cantidad = this.textFMatPrimaCantid1.getText().toLowerCase();
         String unidades = this.textFMatPrimaUnid1.getText().toLowerCase();  
         String precio = this.textFMatPrimaPrecioUnit1.getText();
-        String sku = categoria.toUpperCase().substring(0, 3) + "-" + subcategoria.toUpperCase().substring(0, 4) + "-"+marca.toUpperCase().substring(0, 4) + "-" + tipo.toUpperCase().substring(0, 3);
+        //String sku = categoria.toUpperCase().substring(0, 3) + "-" + subcategoria.toUpperCase().substring(0, 4) + "-"+marca.toUpperCase().substring(0, 4) + "-" + tipo.toUpperCase().substring(0, 3);
+        String sku = categoria.toUpperCase() + "-" + subcategoria.toUpperCase() + "-"+marca.toUpperCase() + "-" + tipo.toUpperCase();
         String producto = "$"+precio+"    "+cantidad+"    "+unidades+"    "+categoria.toUpperCase()+"    "+subcategoria.toUpperCase()+"    "+marca.toUpperCase()+"    "+tipo.toUpperCase();
         //listaOrdenCompra.add(producto);
         listaOrdenCompra2.add(producto);
         agregarAlListado(jList3,listaOrdenCompra2);
         ordenCompraDetalle.add(new ArrayList<String>());
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(producto);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(categoria);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(subcategoria);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(marca);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(tipo);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(cantidad);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(unidades);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(sku);
-        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(precio);
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(producto);        //0
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(categoria);       //1
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(subcategoria);    //2
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(marca);           //3
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(tipo);            //4
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(cantidad);        //5
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(unidades);        //6
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(sku);             //7
+        ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(precio);          //8
         System.out.println(ordenCompraDetalle.size());
         System.out.println(ordenCompraDetalle.get(0).size());
         orden.setDetalleProductos(ordenCompraDetalle);
@@ -1656,9 +1658,13 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void labelButtConfirmarCompra3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtConfirmarCompra3MouseClicked
         // TODO add your handling code here:
+        String montoTotalOrdC = this.textFOrdenCPrecioTotal.getText();
+        orden.setPrecioTotal(Double.valueOf(montoTotalOrdC));
+        orden.setStatus("CLOSED");
         newordenCDAO.insertarOrdenC(orden);
         newordenCDAO.actualizMasterMatPrimas(orden);
-        orden.setStatus("CLOSED");
+        newordenCDAO.insertarTransaccC(orden);
+        
     }//GEN-LAST:event_labelButtConfirmarCompra3MouseClicked
 
     private void textFMatPrimaUnid1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFMatPrimaUnid1MousePressed
@@ -1675,8 +1681,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void textFOrdenCPrecioTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFOrdenCPrecioTotalActionPerformed
         // TODO add your handling code here:
-        String montoTotalOrdC = this.textFOrdenCPrecioTotal.getText();
-        orden.setPrecioTotal(Double.valueOf(montoTotalOrdC));
+        
     }//GEN-LAST:event_textFOrdenCPrecioTotalActionPerformed
 
 

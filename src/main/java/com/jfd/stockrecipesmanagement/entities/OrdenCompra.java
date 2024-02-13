@@ -15,7 +15,7 @@ import java.util.List;
 public class OrdenCompra {
     private String status= "OPEN";
     private String fechaEmision = "2000-01-01 0:00:00";
-    private String numeroOrden = "00000000000000";
+    private int numeroOrden = 00000000000000;
     private List<List<String>> detalleProductos = new ArrayList<>();
     private String observaciones = "";
     private Double precioTotal;
@@ -37,11 +37,11 @@ public class OrdenCompra {
         this.fechaEmision = fechaEmision;
     }
 
-    public String getNumeroOrden() {
+    public int getNumeroOrden() {
         return numeroOrden;
     }
 
-    public void setNumeroOrden(String numeroOrden) {
+    public void setNumeroOrden(int numeroOrden) {
         this.numeroOrden = numeroOrden;
     }
 
