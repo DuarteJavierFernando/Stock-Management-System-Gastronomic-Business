@@ -2179,6 +2179,7 @@ public class MainMenu extends javax.swing.JFrame {
 //-------------------CONSULTAR INVENTARIO-----------------------------------------------------------        
     private void txtButtConsInventMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsInventMouseClicked
         // TODO add your handling code here:
+        inventario = newinventarioDAO.consultarInventario();
         card = (CardLayout) this.background.getLayout();
         card.show(background, "card3");
         
