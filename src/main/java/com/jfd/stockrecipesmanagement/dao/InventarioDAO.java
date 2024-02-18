@@ -24,7 +24,7 @@ public class InventarioDAO {
          cx = new Conexion();
     }
     
-        public List<List<String>> consultarInventario() {
+    public List<List<String>> consultarInventario() {
         try {
             List<List<String>> listaMadre = new ArrayList<>();
             

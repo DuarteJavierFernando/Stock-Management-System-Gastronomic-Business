@@ -34,7 +34,7 @@ public class OrdenCDAO {
             ps.setString(1, ordenC.getFechaEmision());
             ps.setDouble(2, ordenC.getPrecioTotal());
             ps.executeUpdate();
-            System.out.println("CargaExitosa");
+            //System.out.println("CargaExitosa");
             cx.desconectar();
         } catch (SQLException ex) {
             Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -53,7 +53,7 @@ public class OrdenCDAO {
                 ps.setString(5,listaHija.get(6) ); //unidad_cantidad
                 ps.execute();
             }   
-            System.out.println("CargaExitosa");
+            //System.out.println("CargaExitosa");
             cx.desconectar();
         } catch (SQLException ex) {
             Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,7 +78,7 @@ public class OrdenCDAO {
             ps.execute();
             //ps.executeUpdate();
             }
-            System.out.println("CargaExitosa");
+            //System.out.println("CargaExitosa");
             cx.desconectar();
         } catch (SQLException ex) {
             Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +122,7 @@ public class OrdenCDAO {
         ResultSet rs = stmt.executeQuery(consulta);
         int id = rs.getInt("id");
         cx.desconectar();
-        System.out.println(id);
+        //System.out.println(id);
         return id;
         } catch (SQLException ex) {
         Logger.getLogger(OrdenCDAO.class.getName()).log(Level.SEVERE, null, ex);

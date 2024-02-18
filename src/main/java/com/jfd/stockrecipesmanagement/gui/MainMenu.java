@@ -3,9 +3,16 @@ package com.jfd.stockrecipesmanagement.gui;
 import com.jfd.stockrecipesmanagement.dao.InventarioDAO;
 import com.jfd.stockrecipesmanagement.dao.OrdenBDAO;
 import com.jfd.stockrecipesmanagement.dao.OrdenCDAO;
+import com.jfd.stockrecipesmanagement.dao.OrdenVDAO;
+import com.jfd.stockrecipesmanagement.dao.RecetaDAO;
+import com.jfd.stockrecipesmanagement.dao.GastosDAO;
+import com.jfd.stockrecipesmanagement.entities.Gastos;
 import com.jfd.stockrecipesmanagement.entities.OrdenBaja;
 import com.jfd.stockrecipesmanagement.entities.OrdenCompra;
+import com.jfd.stockrecipesmanagement.entities.OrdenVenta;
+import com.jfd.stockrecipesmanagement.entities.Receta;
 import com.jfd.stockrecipesmanagement.files.OrdenCFile;
+import com.jfd.stockrecipesmanagement.files.OrdenVFIle;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.io.IOException;
@@ -18,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
@@ -36,24 +44,45 @@ public class MainMenu extends javax.swing.JFrame {
     private List<String> listaOrdenBaja = new ArrayList<String>();
     private List<String> listaOrdenBaja2 = new ArrayList<String>();
     private List<String> productoDetalle = new ArrayList<String>();
+    private List<String> listaIngredientes = new ArrayList<String>();
     private List<List<String>> ordenCompraDetalle = new ArrayList<>();
     private List<List<String>> ordenBajaDetalle = new ArrayList<>();
     private List<List<String>> inventario = new ArrayList<>();
+    private List<List<String>> recetaIngredientes = new ArrayList<>();
+    private List<String> pedidoRecetas = new ArrayList<>();
+    private List<List<Object>> pedidoIngredientesTOTAL = new ArrayList<>();
+    private List<List<Object>> pedidoIngredientesTOTAL_STOCK = new ArrayList<>();
+    private Double pedidoTiempoTrabajoTotal = 0.0;
+    private Double ctotalMPrima= 0.0;
+
+    
+    
+    
+    private List<List<String>> recetario = new ArrayList<>();
     
     OrdenCompra orden = new OrdenCompra();
     OrdenBaja orden_B = new OrdenBaja();
+    Receta receta = new Receta();
+    OrdenVenta ordenv = new OrdenVenta();
     OrdenCDAO newordenCDAO = new OrdenCDAO();
     OrdenBDAO newordenBDAO = new OrdenBDAO();
+    RecetaDAO newrecetaDAO = new RecetaDAO();
+    OrdenVDAO newordenVDAO = new OrdenVDAO();
+    Gastos newgastos = new Gastos();
     
     int k_ordC;
     int k_ordB;
+    int k_ordR;
     
     InventarioDAO newinventarioDAO = new InventarioDAO();
+    RecetaDAO newrecetarioDAO = new RecetaDAO();
+    GastosDAO newgastosDAO = new GastosDAO();
     
     public MainMenu() {
         initComponents();
         k_ordC=0;
         k_ordB=0;
+        k_ordR=0;
         FontIcon iconPath = FontIcon.of(MaterialDesignS.SUBDIRECTORY_ARROW_RIGHT);
         iconPath.setIconSize(15);
         txtButtToMainMenu.setIcon(iconPath);
@@ -62,11 +91,15 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtToMainMenu3.setIcon(iconPath);
         txtButtToMainMenu4.setIcon(iconPath);
         txtButtToMainMenu5.setIcon(iconPath);
+        txtButtToMainMenu6.setIcon(iconPath);
+        txtButtToMainMenu7.setIcon(iconPath);
+        txtButtToMainMenu8.setIcon(iconPath);
         FontIcon iconrightarrow = FontIcon.of(MaterialDesignA.ARROW_RIGHT_CIRCLE_OUTLINE);
         iconrightarrow.setIconSize(30);
         txtIconNextArrow.setIcon(iconrightarrow);
         txtIconNextArrow1.setIcon(iconrightarrow);
         txtIconNextArrow2.setIcon(iconrightarrow);
+        txtIconNextArrow3.setIcon(iconrightarrow);
         
         
         inventario = newinventarioDAO.consultarInventario();
@@ -92,6 +125,8 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtBajaStock = new javax.swing.JLabel();
         txtBienvenido = new javax.swing.JLabel();
         txtButtCargarRecetaNueva = new javax.swing.JLabel();
+        txtButtConsRecetas = new javax.swing.JLabel();
+        txtButtConsGastos = new javax.swing.JLabel();
         cardPanelNvaOrdC1 = new javax.swing.JPanel();
         nvaOrdC1CentralContentPanel = new javax.swing.JPanel();
         txtButtToMainMenu = new javax.swing.JLabel();
@@ -213,14 +248,102 @@ public class MainMenu extends javax.swing.JFrame {
         jList4 = new javax.swing.JList<>();
         labelButtDarDeBaja = new javax.swing.JLabel();
         labelButtBorrarElemento1 = new javax.swing.JLabel();
+        cardPanelNuevaReceta = new javax.swing.JPanel();
+        labelButtCargarReceta = new javax.swing.JPanel();
+        txtButtToMainMenu6 = new javax.swing.JLabel();
+        txtPathOrdC5 = new javax.swing.JLabel();
+        textFSKU = new javax.swing.JTextField();
+        labelSKU = new javax.swing.JLabel();
+        labelTipoIngrediente = new javax.swing.JLabel();
+        labelCantidadReceta = new javax.swing.JLabel();
+        labelUnidadesReceta = new javax.swing.JLabel();
+        textFCantidadReceta = new javax.swing.JTextField();
+        panelListOrdCompra3 = new javax.swing.JPanel();
+        listOrdenCompra4 = new javax.swing.JScrollPane();
+        jList6 = new javax.swing.JList<>();
+        comboBoxUnidades2 = new javax.swing.JComboBox<>();
+        labelButtCargarElemento3 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        textFRecipiesDetail = new javax.swing.JTextField();
+        listOrdenCompra5 = new javax.swing.JScrollPane();
+        jList7 = new javax.swing.JList<>();
+        labelButtBorrarElemento2 = new javax.swing.JLabel();
+        labelButtCargarReceta1 = new javax.swing.JLabel();
+        comboBoxTipo = new javax.swing.JComboBox<>();
+        labelNombreReceta = new javax.swing.JLabel();
+        textFNombreReceta = new javax.swing.JTextField();
+        labelTiempoPreparacion = new javax.swing.JLabel();
+        textFTiempoPreparacion = new javax.swing.JTextField();
+        cardPanelNuevoPedido = new javax.swing.JPanel();
+        nvaOrdC1CentralContentPanel2 = new javax.swing.JPanel();
+        txtButtToMainMenu7 = new javax.swing.JLabel();
+        txtPathOrdC6 = new javax.swing.JLabel();
+        panelListOrdCompra4 = new javax.swing.JPanel();
+        listOrdenCompra6 = new javax.swing.JScrollPane();
+        jList8 = new javax.swing.JList<>();
+        labelButtAnadirAlPedido = new javax.swing.JLabel();
+        panelOrdenC1BorrarElementoListado3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        listOrdenCompra7 = new javax.swing.JScrollPane();
+        jList9 = new javax.swing.JList<>();
+        panelListOrdCompra5 = new javax.swing.JPanel();
+        listOrdenCompra8 = new javax.swing.JScrollPane();
+        jList10 = new javax.swing.JList<>();
+        jLabel7 = new javax.swing.JLabel();
+        textFCuantasRecetas = new javax.swing.JTextField();
+        txtIconNextArrow3 = new javax.swing.JLabel();
+        cardPanelNuevoPedido1 = new javax.swing.JPanel();
+        nvaOrdC1CentralContentPanel3 = new javax.swing.JPanel();
+        txtButtToMainMenu8 = new javax.swing.JLabel();
+        txtPathOrdC7 = new javax.swing.JLabel();
+        labelButtCalcularCostoTotalPedido = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        listOrdenCompra10 = new javax.swing.JScrollPane();
+        jList12 = new javax.swing.JList<>();
+        panelListOrdCompra7 = new javax.swing.JPanel();
+        listOrdenCompra11 = new javax.swing.JScrollPane();
+        jList13 = new javax.swing.JList<>();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        labelButtGenerarFactura1 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
+        cardPanelConsultGastos = new javax.swing.JPanel();
+        mainMenuCentralPanelContent2 = new javax.swing.JPanel();
+        txtButtToMainMenu9 = new javax.swing.JLabel();
+        txtPathOrdC8 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        labelGastoID = new javax.swing.JLabel();
+        textFGastoID = new javax.swing.JTextField();
+        labelGastoConcepto = new javax.swing.JLabel();
+        textFGastoConcepto = new javax.swing.JTextField();
+        labelGastoMonto = new javax.swing.JLabel();
+        textFGastoMonto = new javax.swing.JTextField();
+        labelButtCargarElemento4 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         background.setBackground(new java.awt.Color(255, 255, 255));
-        background.setPreferredSize(new java.awt.Dimension(1020, 584));
+        background.setPreferredSize(new java.awt.Dimension(1171, 760));
         background.setLayout(new java.awt.CardLayout());
 
         cardPanelMainMenu.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelMainMenu.setPreferredSize(new java.awt.Dimension(1171, 760));
 
         mainMenuCentralPanelContent.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -229,6 +352,9 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtNuevoPedido.setText("Nuevo Pedido");
         txtButtNuevoPedido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtButtNuevoPedido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtNuevoPedidoMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 txtButtNuevoPedidoMouseEntered(evt);
             }
@@ -294,6 +420,9 @@ public class MainMenu extends javax.swing.JFrame {
         txtButtCargarRecetaNueva.setText("Cargar Receta Nueva");
         txtButtCargarRecetaNueva.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtButtCargarRecetaNueva.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtCargarRecetaNuevaMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 txtButtCargarRecetaNuevaMouseEntered(evt);
             }
@@ -302,25 +431,59 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
+        txtButtConsRecetas.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtButtConsRecetas.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtConsRecetas.setText("Consultar Inventario");
+        txtButtConsRecetas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtConsRecetas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtConsRecetasMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtConsRecetasMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtConsRecetasMouseExited(evt);
+            }
+        });
+
+        txtButtConsGastos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtButtConsGastos.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtConsGastos.setText("Consultar Otros Gastos");
+        txtButtConsGastos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtConsGastos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtConsGastosMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtConsGastosMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtConsGastosMouseExited(evt);
+            }
+        });
+
         javax.swing.GroupLayout mainMenuCentralPanelContentLayout = new javax.swing.GroupLayout(mainMenuCentralPanelContent);
         mainMenuCentralPanelContent.setLayout(mainMenuCentralPanelContentLayout);
         mainMenuCentralPanelContentLayout.setHorizontalGroup(
             mainMenuCentralPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainMenuCentralPanelContentLayout.createSequentialGroup()
-                .addContainerGap(290, Short.MAX_VALUE)
+                .addContainerGap(356, Short.MAX_VALUE)
                 .addGroup(mainMenuCentralPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtButtConsGastos)
+                    .addComponent(txtButtConsRecetas)
                     .addComponent(txtButtCargarRecetaNueva, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtButtConsInvent)
                     .addComponent(txtButtNuevoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtButtNvaOrdenC)
                     .addComponent(txtButtBajaStock)
                     .addComponent(txtBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(290, Short.MAX_VALUE))
+                .addContainerGap(357, Short.MAX_VALUE))
         );
         mainMenuCentralPanelContentLayout.setVerticalGroup(
             mainMenuCentralPanelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainMenuCentralPanelContentLayout.createSequentialGroup()
-                .addContainerGap(224, Short.MAX_VALUE)
+                .addContainerGap(259, Short.MAX_VALUE)
                 .addComponent(txtBienvenido)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtButtCargarRecetaNueva)
@@ -332,7 +495,11 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(txtButtNvaOrdenC)
                 .addGap(18, 18, 18)
                 .addComponent(txtButtBajaStock)
-                .addContainerGap(225, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(txtButtConsRecetas)
+                .addGap(18, 18, 18)
+                .addComponent(txtButtConsGastos)
+                .addContainerGap(183, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout cardPanelMainMenuLayout = new javax.swing.GroupLayout(cardPanelMainMenu);
@@ -351,6 +518,7 @@ public class MainMenu extends javax.swing.JFrame {
         background.add(cardPanelMainMenu, "card1");
 
         cardPanelNvaOrdC1.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelNvaOrdC1.setPreferredSize(new java.awt.Dimension(1171, 760));
 
         nvaOrdC1CentralContentPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -500,9 +668,9 @@ public class MainMenu extends javax.swing.JFrame {
         panelOrdenC1BorrarElementoListadoLayout.setHorizontalGroup(
             panelOrdenC1BorrarElementoListadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelOrdenC1BorrarElementoListadoLayout.createSequentialGroup()
-                .addContainerGap(134, Short.MAX_VALUE)
+                .addContainerGap(201, Short.MAX_VALUE)
                 .addComponent(labelButtBorrarElemento)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
         );
         panelOrdenC1BorrarElementoListadoLayout.setVerticalGroup(
             panelOrdenC1BorrarElementoListadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -589,7 +757,7 @@ public class MainMenu extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(nvaOrdC1CentralContentPanelLayout.createSequentialGroup()
                         .addGap(96, 96, 96)
-                        .addComponent(panelListOrdCompra, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)))
+                        .addComponent(panelListOrdCompra, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelOrdenC1BorrarElementoListado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80)
@@ -654,6 +822,7 @@ public class MainMenu extends javax.swing.JFrame {
         background.add(cardPanelNvaOrdC1, "card2");
 
         cardPanelNvaOrdC2.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelNvaOrdC2.setPreferredSize(new java.awt.Dimension(1171, 760));
 
         card1CentralPanelContent2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -741,9 +910,9 @@ public class MainMenu extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtPathOrdCDetalles1))
                     .addGroup(card1CentralPanelContent2Layout.createSequentialGroup()
-                        .addContainerGap(143, Short.MAX_VALUE)
+                        .addContainerGap(209, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(210, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, card1CentralPanelContent2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(card1CentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -771,7 +940,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(labelButtCargarObservaciones)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelObservacCargadasCorrectamente)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 309, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 378, Short.MAX_VALUE)
                 .addComponent(txtIconNextArrow1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39))
         );
@@ -839,6 +1008,7 @@ public class MainMenu extends javax.swing.JFrame {
         background.add(cardPanelNvaOrdC2, "card2b");
 
         cardPanelNvaOrdC3.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelNvaOrdC3.setPreferredSize(new java.awt.Dimension(1171, 760));
 
         card1CentralPanelContent3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -892,7 +1062,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(txtPathOrdCDetalles2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, card1CentralPanelContent3Layout.createSequentialGroup()
-                .addContainerGap(399, Short.MAX_VALUE)
+                .addContainerGap(532, Short.MAX_VALUE)
                 .addGroup(card1CentralPanelContent3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, card1CentralPanelContent3Layout.createSequentialGroup()
                         .addComponent(txtIconNextArrow2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -915,7 +1085,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(labelGeneradoCorrectamente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelConfirmacionGeneracionPDF)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 332, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 401, Short.MAX_VALUE)
                 .addComponent(txtIconNextArrow2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39))
         );
@@ -983,6 +1153,7 @@ public class MainMenu extends javax.swing.JFrame {
         background.add(cardPanelNvaOrdC3, "card2c");
 
         cardPanelNvaOrdC4.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelNvaOrdC4.setPreferredSize(new java.awt.Dimension(1171, 760));
 
         labelButtConfirmarCompra.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1115,9 +1286,9 @@ public class MainMenu extends javax.swing.JFrame {
         panelOrdenC1BorrarElementoListado1Layout.setHorizontalGroup(
             panelOrdenC1BorrarElementoListado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelOrdenC1BorrarElementoListado1Layout.createSequentialGroup()
-                .addContainerGap(120, Short.MAX_VALUE)
+                .addContainerGap(187, Short.MAX_VALUE)
                 .addComponent(labelButtEditarElemento)
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(187, Short.MAX_VALUE))
         );
         panelOrdenC1BorrarElementoListado1Layout.setVerticalGroup(
             panelOrdenC1BorrarElementoListado1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1225,7 +1396,7 @@ public class MainMenu extends javax.swing.JFrame {
                         .addComponent(labelOrdenCPrecioTotal)
                         .addGap(65, 65, 65)
                         .addComponent(textFOrdenCPrecioTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addContainerGap(403, Short.MAX_VALUE))
         );
         labelButtConfirmarCompraLayout.setVerticalGroup(
             labelButtConfirmarCompraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1271,7 +1442,7 @@ public class MainMenu extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(labelButtConfirmarCompraLayout.createSequentialGroup()
                                 .addGap(96, 96, 96)
-                                .addComponent(panelListOrdCompra1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)))
+                                .addComponent(panelListOrdCompra1, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelOrdenC1BorrarElementoListado1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(labelButtConfirmarCompraLayout.createSequentialGroup()
@@ -1343,6 +1514,7 @@ public class MainMenu extends javax.swing.JFrame {
         background.add(cardPanelNvaOrdC4, "card2d");
 
         cardPanelConsultInvent.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelConsultInvent.setPreferredSize(new java.awt.Dimension(1171, 760));
 
         mainMenuCentralPanelContent1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1375,6 +1547,13 @@ public class MainMenu extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("Subcategoria");
+            jTable1.getColumnModel().getColumn(3).setHeaderValue("Marca");
+            jTable1.getColumnModel().getColumn(4).setHeaderValue("Tipo");
+            jTable1.getColumnModel().getColumn(5).setHeaderValue("Cantidad");
+            jTable1.getColumnModel().getColumn(6).setHeaderValue("unidad_Cantidad");
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1444,6 +1623,7 @@ public class MainMenu extends javax.swing.JFrame {
         background.add(cardPanelConsultInvent, "card3");
 
         cardPanelBajaProducto.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelBajaProducto.setPreferredSize(new java.awt.Dimension(1171, 760));
 
         nvaOrdC1CentralContentPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1464,7 +1644,6 @@ public class MainMenu extends javax.swing.JFrame {
 
         txtPathOrdC4.setText("/Baja de Stock");
 
-        textFMatPrimaCateg2.setText("-");
         textFMatPrimaCateg2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         textFMatPrimaCateg2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -1489,7 +1668,6 @@ public class MainMenu extends javax.swing.JFrame {
 
         labelMatPrimaUnidades2.setText("Unidades");
 
-        textFMatPrimaSubcateg2.setText("-");
         textFMatPrimaSubcateg2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 textFMatPrimaSubcateg2MousePressed(evt);
@@ -1501,14 +1679,12 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        textFMatPrimaMarca2.setText("-");
         textFMatPrimaMarca2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 textFMatPrimaMarca2MousePressed(evt);
             }
         });
 
-        textFMatPrimaTipo2.setText("-");
         textFMatPrimaTipo2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 textFMatPrimaTipo2MousePressed(evt);
@@ -1520,7 +1696,6 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        textFMatPrimaCantid2.setText("-");
         textFMatPrimaCantid2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 textFMatPrimaCantid2MousePressed(evt);
@@ -1759,6 +1934,1002 @@ public class MainMenu extends javax.swing.JFrame {
 
         background.add(cardPanelBajaProducto, "card4");
 
+        cardPanelNuevaReceta.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelNuevaReceta.setPreferredSize(new java.awt.Dimension(1171, 760));
+
+        labelButtCargarReceta.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtButtToMainMenu6.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtToMainMenu6.setText("Menú Principal");
+        txtButtToMainMenu6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtToMainMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu6MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu6MouseExited(evt);
+            }
+        });
+
+        txtPathOrdC5.setText("/Nueva Receta");
+
+        textFSKU.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        textFSKU.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFSKUMousePressed(evt);
+            }
+        });
+        textFSKU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFSKUActionPerformed(evt);
+            }
+        });
+
+        labelSKU.setText("Ingresar SKU del ingrediente:");
+
+        labelTipoIngrediente.setText("Tipo");
+
+        labelCantidadReceta.setText("Cantidad");
+
+        labelUnidadesReceta.setText("Unidades");
+
+        textFCantidadReceta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFCantidadRecetaMousePressed(evt);
+            }
+        });
+
+        panelListOrdCompra3.setLayout(new java.awt.BorderLayout());
+
+        jList6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList6.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "sus productos aparecerán aquí" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList6.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList6.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList6.setVisibleRowCount(15);
+        listOrdenCompra4.setViewportView(jList6);
+
+        panelListOrdCompra3.add(listOrdenCompra4, java.awt.BorderLayout.CENTER);
+
+        comboBoxUnidades2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-", "kg", "g", "l", "ml", "u." }));
+        comboBoxUnidades2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        comboBoxUnidades2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        comboBoxUnidades2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxUnidades2ActionPerformed(evt);
+            }
+        });
+
+        labelButtCargarElemento3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtCargarElemento3.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtCargarElemento3.setText("Cargar Elemento");
+        labelButtCargarElemento3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtCargarElemento3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtCargarElemento3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtCargarElemento3MouseClicked(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setText("Detalla de La Receta");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("Usted Cuenta con estos productos en su Inventario:");
+
+        textFRecipiesDetail.setForeground(new java.awt.Color(204, 204, 204));
+        textFRecipiesDetail.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        textFRecipiesDetail.setText("Introduzca la Descripción de la Receta Aquí");
+        textFRecipiesDetail.setToolTipText("");
+        textFRecipiesDetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textFRecipiesDetailMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFRecipiesDetailMousePressed(evt);
+            }
+        });
+        textFRecipiesDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFRecipiesDetailActionPerformed(evt);
+            }
+        });
+
+        jList7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList7.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Ingredientes de la Receta" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList7.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList7.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList7.setVisibleRowCount(15);
+        listOrdenCompra5.setViewportView(jList7);
+
+        labelButtBorrarElemento2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtBorrarElemento2.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtBorrarElemento2.setText("Borrar Elemento Seleccionado");
+        labelButtBorrarElemento2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtBorrarElemento2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtBorrarElemento2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtBorrarElemento2MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(textFRecipiesDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(listOrdenCompra5, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(131, 131, 131)
+                        .addComponent(labelButtBorrarElemento2)))
+                .addGap(58, 58, 58))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textFRecipiesDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(listOrdenCompra5, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(labelButtBorrarElemento2)))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        labelButtCargarReceta1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        labelButtCargarReceta1.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtCargarReceta1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelButtCargarReceta1.setText("Cargar Receta");
+        labelButtCargarReceta1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtCargarReceta1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtCargarReceta1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtCargarReceta1MouseClicked(evt);
+            }
+        });
+
+        comboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-", "Base", "Relleno", "Decoracion", "Cobertura", "Envoltorio", "Otro" }));
+        comboBoxTipo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        comboBoxTipo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        comboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxTipoActionPerformed(evt);
+            }
+        });
+
+        labelNombreReceta.setText("Nombre de Receta");
+
+        textFNombreReceta.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        textFNombreReceta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textFNombreRecetaMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFNombreRecetaMousePressed(evt);
+            }
+        });
+        textFNombreReceta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFNombreRecetaActionPerformed(evt);
+            }
+        });
+
+        labelTiempoPreparacion.setText("Tiempo de Preparación (hs)");
+
+        textFTiempoPreparacion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFTiempoPreparacionMousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout labelButtCargarRecetaLayout = new javax.swing.GroupLayout(labelButtCargarReceta);
+        labelButtCargarReceta.setLayout(labelButtCargarRecetaLayout);
+        labelButtCargarRecetaLayout.setHorizontalGroup(
+            labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(txtButtToMainMenu6, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPathOrdC5))
+                    .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(19, 19, 19))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelButtCargarRecetaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelButtCargarReceta1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(418, 418, 418))
+            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                        .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelSKU)
+                                    .addComponent(textFSKU, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelNombreReceta)
+                                    .addComponent(textFNombreReceta, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelCantidadReceta)
+                                    .addComponent(labelTipoIngrediente)
+                                    .addComponent(labelUnidadesReceta)
+                                    .addComponent(labelTiempoPreparacion))
+                                .addGap(58, 58, 58)
+                                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(textFCantidadReceta)
+                                    .addComponent(comboBoxUnidades2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(comboBoxTipo, 0, 142, Short.MAX_VALUE)
+                                    .addComponent(textFTiempoPreparacion))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                                .addComponent(panelListOrdCompra3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(19, 19, 19))))
+                    .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addContainerGap())))
+            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                .addGap(145, 145, 145)
+                .addComponent(labelButtCargarElemento3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        labelButtCargarRecetaLayout.setVerticalGroup(
+            labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtButtToMainMenu6)
+                    .addComponent(txtPathOrdC5))
+                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel4)
+                        .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panelListOrdCompra3, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addComponent(labelSKU)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textFSKU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(labelTiempoPreparacion)
+                                    .addComponent(textFTiempoPreparacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(15, 15, 15)
+                                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(labelTipoIngrediente)
+                                    .addComponent(comboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(labelCantidadReceta)
+                                    .addComponent(textFCantidadReceta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(labelButtCargarRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(comboBoxUnidades2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelUnidadesReceta)))))
+                    .addGroup(labelButtCargarRecetaLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(labelNombreReceta)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFNombreReceta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelButtCargarElemento3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(labelButtCargarReceta1)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout cardPanelNuevaRecetaLayout = new javax.swing.GroupLayout(cardPanelNuevaReceta);
+        cardPanelNuevaReceta.setLayout(cardPanelNuevaRecetaLayout);
+        cardPanelNuevaRecetaLayout.setHorizontalGroup(
+            cardPanelNuevaRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelNuevaRecetaLayout.createSequentialGroup()
+                .addGap(210, 210, 210)
+                .addComponent(labelButtCargarReceta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        cardPanelNuevaRecetaLayout.setVerticalGroup(
+            cardPanelNuevaRecetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(labelButtCargarReceta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        background.add(cardPanelNuevaReceta, "card5");
+
+        cardPanelNuevoPedido.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelNuevoPedido.setPreferredSize(new java.awt.Dimension(1171, 760));
+
+        nvaOrdC1CentralContentPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtButtToMainMenu7.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtToMainMenu7.setText("Menú Principal");
+        txtButtToMainMenu7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtToMainMenu7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu7MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu7MouseExited(evt);
+            }
+        });
+
+        txtPathOrdC6.setText("/Nuevo Pedido");
+
+        panelListOrdCompra4.setLayout(new java.awt.BorderLayout());
+
+        jList8.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList8.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "detalle del pedido" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList8.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList8.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList8.setVisibleRowCount(15);
+        listOrdenCompra6.setViewportView(jList8);
+
+        panelListOrdCompra4.add(listOrdenCompra6, java.awt.BorderLayout.CENTER);
+
+        labelButtAnadirAlPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtAnadirAlPedido.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtAnadirAlPedido.setText("Añadir al Pedido");
+        labelButtAnadirAlPedido.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtAnadirAlPedido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtAnadirAlPedido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtAnadirAlPedidoMouseClicked(evt);
+            }
+        });
+
+        panelOrdenC1BorrarElementoListado3.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout panelOrdenC1BorrarElementoListado3Layout = new javax.swing.GroupLayout(panelOrdenC1BorrarElementoListado3);
+        panelOrdenC1BorrarElementoListado3.setLayout(panelOrdenC1BorrarElementoListado3Layout);
+        panelOrdenC1BorrarElementoListado3Layout.setHorizontalGroup(
+            panelOrdenC1BorrarElementoListado3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelOrdenC1BorrarElementoListado3Layout.setVerticalGroup(
+            panelOrdenC1BorrarElementoListado3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 28, Short.MAX_VALUE)
+        );
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("Ingredientes Necesarios / Disponibles");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setText("Elija la receta que desea cargar al pedido");
+
+        jList9.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList9.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "sus productos aparecerán aquí" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList9.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList9.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList9.setVisibleRowCount(15);
+        listOrdenCompra7.setViewportView(jList9);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(listOrdenCompra7, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(listOrdenCompra7, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        panelListOrdCompra5.setLayout(new java.awt.BorderLayout());
+
+        jList10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList10.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "detalle del pedido" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList10.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList10.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList10.setVisibleRowCount(15);
+        listOrdenCompra8.setViewportView(jList10);
+
+        panelListOrdCompra5.add(listOrdenCompra8, java.awt.BorderLayout.CENTER);
+
+        jLabel7.setText("¿Cuántos?");
+
+        textFCuantasRecetas.setText("0");
+        textFCuantasRecetas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFCuantasRecetasActionPerformed(evt);
+            }
+        });
+
+        txtIconNextArrow3.setText(" ");
+        txtIconNextArrow3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtIconNextArrow3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtIconNextArrow3MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout nvaOrdC1CentralContentPanel2Layout = new javax.swing.GroupLayout(nvaOrdC1CentralContentPanel2);
+        nvaOrdC1CentralContentPanel2.setLayout(nvaOrdC1CentralContentPanel2Layout);
+        nvaOrdC1CentralContentPanel2Layout.setHorizontalGroup(
+            nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                        .addGap(340, 340, 340)
+                        .addComponent(panelOrdenC1BorrarElementoListado3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(38, 38, 38))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                        .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                                .addGap(0, 133, Short.MAX_VALUE)
+                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(textFCuantasRecetas, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(100, 100, 100)
+                        .addComponent(txtIconNextArrow3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54))
+                    .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                        .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(panelListOrdCompra4, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(txtButtToMainMenu7, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPathOrdC6))
+                    .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                        .addGap(156, 156, 156)
+                        .addComponent(labelButtAnadirAlPedido)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                    .addContainerGap(506, Short.MAX_VALUE)
+                    .addComponent(panelListOrdCompra5, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(9, 9, 9)))
+        );
+        nvaOrdC1CentralContentPanel2Layout.setVerticalGroup(
+            nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtButtToMainMenu7)
+                    .addComponent(txtPathOrdC6))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel6)
+                .addGap(12, 12, 12)
+                .addComponent(panelListOrdCompra4, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(textFCuantasRecetas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addComponent(labelButtAnadirAlPedido)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addComponent(panelOrdenC1BorrarElementoListado3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtIconNextArrow3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(67, 67, 67))
+            .addGroup(nvaOrdC1CentralContentPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(nvaOrdC1CentralContentPanel2Layout.createSequentialGroup()
+                    .addGap(85, 85, 85)
+                    .addComponent(panelListOrdCompra5, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(457, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout cardPanelNuevoPedidoLayout = new javax.swing.GroupLayout(cardPanelNuevoPedido);
+        cardPanelNuevoPedido.setLayout(cardPanelNuevoPedidoLayout);
+        cardPanelNuevoPedidoLayout.setHorizontalGroup(
+            cardPanelNuevoPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelNuevoPedidoLayout.createSequentialGroup()
+                .addGap(210, 210, 210)
+                .addComponent(nvaOrdC1CentralContentPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        cardPanelNuevoPedidoLayout.setVerticalGroup(
+            cardPanelNuevoPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nvaOrdC1CentralContentPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        background.add(cardPanelNuevoPedido, "card6");
+
+        cardPanelNuevoPedido1.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelNuevoPedido1.setPreferredSize(new java.awt.Dimension(1171, 760));
+
+        nvaOrdC1CentralContentPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtButtToMainMenu8.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtToMainMenu8.setText("Menú Principal");
+        txtButtToMainMenu8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtToMainMenu8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu8MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu8MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu8MouseExited(evt);
+            }
+        });
+
+        txtPathOrdC7.setText("/Nuevo Pedido 2");
+
+        labelButtCalcularCostoTotalPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtCalcularCostoTotalPedido.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtCalcularCostoTotalPedido.setText("Calcular Costo Total del Pedido");
+        labelButtCalcularCostoTotalPedido.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtCalcularCostoTotalPedido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtCalcularCostoTotalPedido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtCalcularCostoTotalPedidoMouseClicked(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setText("Detalle Otros Castos");
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setText("Detalle de Costos de Materias Primas");
+
+        jList12.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList12.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "sus productos aparecerán aquí" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList12.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList12.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList12.setVisibleRowCount(15);
+        listOrdenCompra10.setViewportView(jList12);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(listOrdenCompra10, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(listOrdenCompra10, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+
+        panelListOrdCompra7.setLayout(new java.awt.BorderLayout());
+
+        jList13.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jList13.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "detalle costos ingredientes" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList13.setSelectionBackground(new java.awt.Color(25, 118, 211));
+        jList13.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jList13.setVisibleRowCount(15);
+        listOrdenCompra11.setViewportView(jList13);
+
+        panelListOrdCompra7.add(listOrdenCompra11, java.awt.BorderLayout.CENTER);
+
+        jLabel10.setText("Costo Total Materia Prima:");
+        jLabel10.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel12.setText("Horas de Trabajo Totales:");
+        jLabel12.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jTextField1.setText("jTextField1");
+
+        jTextField2.setText("jTextField1");
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Total Otros Gastos:");
+        jLabel13.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jTextField3.setText("jTextField1");
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
+
+        labelButtGenerarFactura1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtGenerarFactura1.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtGenerarFactura1.setText("Confirmar Precio Venta y Generar Factura");
+        labelButtGenerarFactura1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtGenerarFactura1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtGenerarFactura1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtGenerarFactura1MouseClicked(evt);
+            }
+        });
+
+        jLabel14.setText("Costo Total:");
+        jLabel14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jTextField4.setText("0");
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("Precio de Venta de Pedido");
+        jLabel15.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jTextField5.setText("0");
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout nvaOrdC1CentralContentPanel3Layout = new javax.swing.GroupLayout(nvaOrdC1CentralContentPanel3);
+        nvaOrdC1CentralContentPanel3.setLayout(nvaOrdC1CentralContentPanel3Layout);
+        nvaOrdC1CentralContentPanel3Layout.setHorizontalGroup(
+            nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                .addGap(0, 509, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addGap(203, 203, 203))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                        .addGap(116, 116, 116)
+                        .addComponent(labelButtGenerarFactura1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+            .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(labelButtCalcularCostoTotalPedido))
+                    .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                                .addComponent(txtButtToMainMenu8, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPathOrdC7))
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                    .addContainerGap(506, Short.MAX_VALUE)
+                    .addComponent(panelListOrdCompra7, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(9, 9, 9)))
+        );
+        nvaOrdC1CentralContentPanel3Layout.setVerticalGroup(
+            nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtButtToMainMenu8)
+                    .addComponent(txtPathOrdC7))
+                .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel9)
+                        .addGap(244, 244, 244)
+                        .addComponent(jLabel8))
+                    .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                        .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                                .addGap(63, 63, 63)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addComponent(labelButtCalcularCostoTotalPedido)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel14)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(28, 28, 28)
+                .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                        .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel15)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(labelButtGenerarFactura1))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(97, Short.MAX_VALUE))
+            .addGroup(nvaOrdC1CentralContentPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(nvaOrdC1CentralContentPanel3Layout.createSequentialGroup()
+                    .addGap(85, 85, 85)
+                    .addComponent(panelListOrdCompra7, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(457, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout cardPanelNuevoPedido1Layout = new javax.swing.GroupLayout(cardPanelNuevoPedido1);
+        cardPanelNuevoPedido1.setLayout(cardPanelNuevoPedido1Layout);
+        cardPanelNuevoPedido1Layout.setHorizontalGroup(
+            cardPanelNuevoPedido1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelNuevoPedido1Layout.createSequentialGroup()
+                .addGap(210, 210, 210)
+                .addComponent(nvaOrdC1CentralContentPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        cardPanelNuevoPedido1Layout.setVerticalGroup(
+            cardPanelNuevoPedido1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nvaOrdC1CentralContentPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        background.add(cardPanelNuevoPedido1, "card7");
+
+        cardPanelConsultGastos.setBackground(new java.awt.Color(25, 118, 211));
+        cardPanelConsultGastos.setPreferredSize(new java.awt.Dimension(1171, 760));
+
+        mainMenuCentralPanelContent2.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtButtToMainMenu9.setForeground(new java.awt.Color(25, 118, 211));
+        txtButtToMainMenu9.setText("Menú Principal");
+        txtButtToMainMenu9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        txtButtToMainMenu9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu9MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu9MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                txtButtToMainMenu9MouseExited(evt);
+            }
+        });
+
+        txtPathOrdC8.setText("/ Consultar Inventario");
+
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTable2.setAutoCreateRowSorter(true);
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "id", "Concepto", "Monto Mensual"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 414, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGap(12, 12, 12)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
+                    .addGap(13, 13, 13)))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 632, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGap(10, 10, 10)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(216, Short.MAX_VALUE)))
+        );
+
+        labelGastoID.setText("id");
+
+        textFGastoID.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        textFGastoID.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFGastoIDMousePressed(evt);
+            }
+        });
+        textFGastoID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFGastoIDActionPerformed(evt);
+            }
+        });
+
+        labelGastoConcepto.setText("Concepto");
+
+        textFGastoConcepto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFGastoConceptoMousePressed(evt);
+            }
+        });
+        textFGastoConcepto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFGastoConceptoActionPerformed(evt);
+            }
+        });
+
+        labelGastoMonto.setText("Monto Mensual");
+
+        textFGastoMonto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                textFGastoMontoMousePressed(evt);
+            }
+        });
+
+        labelButtCargarElemento4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelButtCargarElemento4.setForeground(new java.awt.Color(0, 0, 255));
+        labelButtCargarElemento4.setText("Cargar Elemento");
+        labelButtCargarElemento4.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        labelButtCargarElemento4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelButtCargarElemento4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelButtCargarElemento4MouseClicked(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setText("Agregar o Actualizar Gastos");
+
+        javax.swing.GroupLayout mainMenuCentralPanelContent2Layout = new javax.swing.GroupLayout(mainMenuCentralPanelContent2);
+        mainMenuCentralPanelContent2.setLayout(mainMenuCentralPanelContent2Layout);
+        mainMenuCentralPanelContent2Layout.setHorizontalGroup(
+            mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                        .addGap(112, 112, 112)
+                        .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelGastoID)
+                            .addComponent(labelGastoConcepto)
+                            .addComponent(labelGastoMonto))
+                        .addGap(41, 41, 41)
+                        .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textFGastoConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textFGastoID, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textFGastoMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                        .addGap(165, 165, 165)
+                        .addComponent(labelButtCargarElemento4))
+                    .addGroup(mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addGroup(mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                                .addComponent(txtButtToMainMenu9, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPathOrdC8)))))
+                .addContainerGap())
+            .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                    .addContainerGap(530, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
+        );
+        mainMenuCentralPanelContent2Layout.setVerticalGroup(
+            mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtButtToMainMenu9)
+                    .addComponent(txtPathOrdC8))
+                .addGap(40, 40, 40)
+                .addComponent(jLabel11)
+                .addGap(28, 28, 28)
+                .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textFGastoID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelGastoID))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelGastoConcepto)
+                    .addComponent(textFGastoConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelGastoMonto)
+                    .addComponent(textFGastoMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addComponent(labelButtCargarElemento4)
+                .addContainerGap())
+            .addGroup(mainMenuCentralPanelContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainMenuCentralPanelContent2Layout.createSequentialGroup()
+                    .addContainerGap(72, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(56, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout cardPanelConsultGastosLayout = new javax.swing.GroupLayout(cardPanelConsultGastos);
+        cardPanelConsultGastos.setLayout(cardPanelConsultGastosLayout);
+        cardPanelConsultGastosLayout.setHorizontalGroup(
+            cardPanelConsultGastosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelConsultGastosLayout.createSequentialGroup()
+                .addGap(202, 202, 202)
+                .addComponent(mainMenuCentralPanelContent2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        cardPanelConsultGastosLayout.setVerticalGroup(
+            cardPanelConsultGastosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainMenuCentralPanelContent2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        background.add(cardPanelConsultGastos, "card9");
+
         getContentPane().add(background, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -1836,8 +3007,8 @@ public class MainMenu extends javax.swing.JFrame {
         ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(sku);
         ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(precio);
         
-        System.out.println(ordenCompraDetalle.size());
-        System.out.println(ordenCompraDetalle.get(0).size());
+        //System.out.println(ordenCompraDetalle.size());
+        //System.out.println(ordenCompraDetalle.get(0).size());
         orden.setDetalleProductos(ordenCompraDetalle);
         
         labelButtCargarElemento.setForeground(new java.awt.Color(25, 118, 211));
@@ -2059,8 +3230,8 @@ public class MainMenu extends javax.swing.JFrame {
         ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(unidades);        //6
         ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(sku);             //7
         ordenCompraDetalle.get(ordenCompraDetalle.size() - 1).add(precio);          //8
-        System.out.println(ordenCompraDetalle.size());
-        System.out.println(ordenCompraDetalle.get(0).size());
+        //System.out.println(ordenCompraDetalle.size());
+        //System.out.println(ordenCompraDetalle.get(0).size());
         orden.setDetalleProductos(ordenCompraDetalle);
 
         
@@ -2293,8 +3464,8 @@ public class MainMenu extends javax.swing.JFrame {
         ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(sku);
         ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(precio);
         
-        System.out.println(ordenBajaDetalle.size());
-        System.out.println(ordenBajaDetalle.get(0).size());
+        //System.out.println(ordenBajaDetalle.size());
+        //System.out.println(ordenBajaDetalle.get(0).size());
         orden_B.setDetalleProductos(ordenBajaDetalle);
         
         labelButtCargarElemento2.setForeground(new java.awt.Color(25, 118, 211));
@@ -2339,6 +3510,436 @@ public class MainMenu extends javax.swing.JFrame {
         //eliminarDelListado_B(indice_borrado,jList3,listaOrdenBaja2);
     }//GEN-LAST:event_labelButtBorrarElemento1MouseClicked
 
+    private void txtButtToMainMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu6MouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card1");
+    }//GEN-LAST:event_txtButtToMainMenu6MouseClicked
+
+    private void txtButtToMainMenu6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu6MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu6MouseEntered
+
+    private void txtButtToMainMenu6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu6MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu6MouseExited
+
+    private void textFSKUMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFSKUMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFSKUMousePressed
+
+    private void textFSKUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFSKUActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFSKUActionPerformed
+
+    private void textFCantidadRecetaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFCantidadRecetaMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFCantidadRecetaMousePressed
+
+    private void comboBoxUnidades2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxUnidades2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxUnidades2ActionPerformed
+
+    private void labelButtCargarElemento3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtCargarElemento3MouseClicked
+        // TODO add your handling code here:
+        labelButtCargarElemento3.setForeground(new java.awt.Color(23, 132, 21));
+        
+        
+        String sku_ingrediente = this.textFSKU.getText().toLowerCase();
+        String cantidadReceta = this.textFCantidadReceta.getText().toLowerCase();
+        int indexcombobox_unidades = this.comboBoxUnidades2.getSelectedIndex();
+        String unidades = this.comboBoxUnidades2.getItemAt(indexcombobox_unidades).toLowerCase();
+        int indexcombobox_tipo = this.comboBoxTipo.getSelectedIndex();
+        String tipoReceta = this.comboBoxTipo.getItemAt(indexcombobox_tipo).toLowerCase();
+        
+        //String tipo = this.textFMatPrimaTipo2.getText().toLowerCase();
+        //String cantidad = this.textFMatPrimaCantid2.getText().toLowerCase();
+         
+        //String sku = categoria.toUpperCase().substring(0, 3) + "-" + subcategoria.toUpperCase().substring(0, 4) + "-"+marca.toUpperCase().substring(0, 3) + "-" + tipo.toUpperCase().substring(0, 3);
+        //String sku = categoria.toUpperCase() + "-" + subcategoria.toUpperCase() + "-"+marca.toUpperCase() + "-" + tipo.toUpperCase();
+        String ingred = tipoReceta+"  :  "+cantidadReceta+" " + unidades + "    "+sku_ingrediente.toUpperCase();
+        //String precio = "0";
+        listaIngredientes.add(ingred);
+        //listaOrdenBaja.add(producto);
+        //listaOrdenBaja2.add("$0"+"    "+producto);
+        agregarAlListado(jList7,listaIngredientes);
+        //agregarAlListado(jList4,listaOrdenCompra2);
+        
+        recetaIngredientes.add(new ArrayList<String>());
+        recetaIngredientes.get(recetaIngredientes.size() - 1).add(sku_ingrediente);
+        recetaIngredientes.get(recetaIngredientes.size() - 1).add(tipoReceta);
+        recetaIngredientes.get(recetaIngredientes.size() - 1).add(cantidadReceta);
+        recetaIngredientes.get(recetaIngredientes.size() - 1).add(unidades);
+
+        
+        
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(categoria);
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(subcategoria);
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(marca);
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(tipo);
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(cantidad);
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(unidades);
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(sku);
+        //ordenBajaDetalle.get(ordenBajaDetalle.size() - 1).add(precio);
+        
+        //System.out.println(ordenBajaDetalle.size());
+        //System.out.println(ordenBajaDetalle.get(0).size());
+       
+        
+        labelButtCargarElemento3.setForeground(new java.awt.Color(25, 118, 211));
+    }//GEN-LAST:event_labelButtCargarElemento3MouseClicked
+
+    private void labelButtCargarReceta1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtCargarReceta1MouseClicked
+        // TODO add your handling code here:
+        String nombreReceta = this.textFNombreReceta.getText().toLowerCase();
+        String detalleReceta = this.textFRecipiesDetail.getText().toLowerCase();
+        Double tiempoPreparacion = Double.valueOf(this.textFTiempoPreparacion.getText());
+        receta.setTiempoPreparacion(tiempoPreparacion);
+        receta.setIngredientes(recetaIngredientes);
+        receta.setDetalleReceta(detalleReceta);
+        receta.setNombreReceta(nombreReceta);
+        newrecetaDAO.insertarReceta(receta);
+        newrecetaDAO.insertarIngred(receta);
+        
+    }//GEN-LAST:event_labelButtCargarReceta1MouseClicked
+
+    private void labelButtBorrarElemento2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtBorrarElemento2MouseClicked
+        // TODO add your handling code here:
+        int indice_borrado = eliminarDelListado(jList7,listaIngredientes,recetaIngredientes);
+    }//GEN-LAST:event_labelButtBorrarElemento2MouseClicked
+
+    private void txtButtCargarRecetaNuevaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtCargarRecetaNuevaMouseClicked
+        // TODO add your handling code here:
+        receta.setNumeroIDReceta(newrecetaDAO.consultarRecetaid());
+        k_ordR=k_ordR+1;
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card5");
+
+        if(k_ordR>1){
+            vaciarJList(jList6);
+            //vaciarJList(jList7);
+        }
+        agregarAlListado(jList6,concatenarListasHijas(inventario));
+    }//GEN-LAST:event_txtButtCargarRecetaNuevaMouseClicked
+
+    private void textFRecipiesDetailMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFRecipiesDetailMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFRecipiesDetailMousePressed
+
+    private void textFRecipiesDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFRecipiesDetailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFRecipiesDetailActionPerformed
+
+    private void comboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxTipoActionPerformed
+
+    private void textFNombreRecetaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFNombreRecetaMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFNombreRecetaMousePressed
+
+    private void textFNombreRecetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFNombreRecetaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFNombreRecetaActionPerformed
+
+    private void textFNombreRecetaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFNombreRecetaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFNombreRecetaMouseClicked
+
+    private void txtButtConsRecetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsRecetasMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtConsRecetasMouseClicked
+
+    private void txtButtConsRecetasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsRecetasMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtConsRecetasMouseEntered
+
+    private void txtButtConsRecetasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsRecetasMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtConsRecetasMouseExited
+
+    private void textFRecipiesDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFRecipiesDetailMouseClicked
+        // TODO add your handling code here:
+        if (textFRecipiesDetail.getText().equals("Introduzca la Descripción de la Receta Aquí")){
+            textFRecipiesDetail.setText("");
+            textFRecipiesDetail.setForeground(new java.awt.Color(0, 0, 0));
+        }
+    }//GEN-LAST:event_textFRecipiesDetailMouseClicked
+
+    private void textFTiempoPreparacionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFTiempoPreparacionMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFTiempoPreparacionMousePressed
+
+    private void txtButtToMainMenu7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu7MouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card1");
+    }//GEN-LAST:event_txtButtToMainMenu7MouseClicked
+
+    private void txtButtToMainMenu7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu7MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu7MouseEntered
+
+    private void txtButtToMainMenu7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu7MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu7MouseExited
+
+    private void labelButtAnadirAlPedidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtAnadirAlPedidoMouseClicked
+        // TODO add your handling code here:
+        List<List<Object>> lista_ingredientes_stock = new ArrayList<>();
+        List<String> ret = new ArrayList<>();
+        ret = seleccionarLaReceta(jList8,concatenarListasHijas(recetario),recetario);
+        Double cant_r = Double.parseDouble(this.textFCuantasRecetas.getText());
+        pedidoTiempoTrabajoTotal = pedidoTiempoTrabajoTotal + cant_r*Double.parseDouble(ret.get(2));
+        System.out.println(pedidoTiempoTrabajoTotal);
+        //pedidoRecetas.add (String.valueOf(cant_r)+"  x  "+ret.get(1)+"     "+ret.get(2)+"hs.");
+        pedidoRecetas.add (String.valueOf(cant_r)+"  x  "+ret.get(1));
+        agregarAlListado(jList10,pedidoRecetas);
+        ordenv.setDetalleProductos(pedidoRecetas);
+        int id_receta = Integer.parseInt( ret.get(0));
+        List<List<Object>> lista_ingredientes = newordenVDAO.consultarIngredientesReceta(id_receta,cant_r);
+        
+        //System.out.println(lista_ingredientes_stock);
+        for (List<Object> ingrediente : lista_ingredientes) {
+            String sku = (String) ingrediente.get(0);            
+            List<Object> ingrediente_stock = newordenVDAO.consultarStockIngredientes(sku);
+            Double costo_ingrediente = newordenVDAO.consultarCostoStockIngredientes(sku);
+            List<Object> sublista_ingredientes_stock = new ArrayList<>();
+            for (int i = 0; i < ingrediente_stock.size(); i++){
+                sublista_ingredientes_stock.add(ingrediente_stock.get(i));
+            } 
+            //System.out.println(sublista_ingredientes_stock);
+            sublista_ingredientes_stock.add(costo_ingrediente);
+            //System.out.println(sublista_ingredientes_stock);
+            lista_ingredientes_stock.add(sublista_ingredientes_stock);
+        }
+        //System.out.println("------------------------");
+        //System.out.println(lista_ingredientes);
+        //System.out.println(lista_ingredientes_stock);
+        //System.out.println("------------------------");
+        
+        
+        
+        List<List<List<Object>>> retor = verificarUnidades(lista_ingredientes,lista_ingredientes_stock);
+        lista_ingredientes = retor.get(0) ;
+        lista_ingredientes_stock=retor.get(1);
+        
+        //System.out.println("------------------------");
+        //System.out.println(lista_ingredientes);
+        //System.out.println(lista_ingredientes_stock);
+        //System.out.println("------------------------");
+        
+        for (List<Object> ingrediente_stk : lista_ingredientes_stock){
+            pedidoIngredientesTOTAL_STOCK.add(ingrediente_stk);
+        }
+        
+        // unificar ingredientes de todas recetas
+        for (List<Object> ingrediente : lista_ingredientes) {
+            if (  pedidoIngredientesTOTAL.isEmpty() ){
+                pedidoIngredientesTOTAL.add(ingrediente);
+            } else{
+                String sku_ingr=(String) ingrediente.get(0);
+                Double cant_x_cantped= (Double) ingrediente.get(1);
+                String un_cant_ingr=(String) ingrediente.get(2);
+                List<Object> auxil = new ArrayList<>();
+                for (int i = 0; i < pedidoIngredientesTOTAL.size(); i++){
+                    if(sku_ingr.equals(pedidoIngredientesTOTAL.get(i).get(0))){
+                       
+                       if ( ! un_cant_ingr.equals(pedidoIngredientesTOTAL.get(i).get(2))){
+                           cant_x_cantped = TransformarUnidades(cant_x_cantped,un_cant_ingr,(String) pedidoIngredientesTOTAL.get(i).get(2));
+                           un_cant_ingr = (String) pedidoIngredientesTOTAL.get(i).get(2);
+                       }
+                       Double sumar = (Double) pedidoIngredientesTOTAL.get(i).get(1);
+                       cant_x_cantped = cant_x_cantped + sumar;
+                       pedidoIngredientesTOTAL.remove(i);
+                    }
+                }
+                auxil.add(sku_ingr);
+                auxil.add(cant_x_cantped);
+                auxil.add(un_cant_ingr);
+                pedidoIngredientesTOTAL.add(auxil);
+            }
+        }
+        
+        //System.out.println("-1-----------------------");
+        //System.out.println(pedidoIngredientesTOTAL);
+        //System.out.println(pedidoIngredientesTOTAL_STOCK);
+        //System.out.println("-1-----------------------");
+        
+        ctotalMPrima =agregarAlListado2(jList9,pedidoIngredientesTOTAL,pedidoIngredientesTOTAL_STOCK);
+        ctotalMPrima = agregarAlListado2(jList13,pedidoIngredientesTOTAL,pedidoIngredientesTOTAL_STOCK);
+        
+        
+    }//GEN-LAST:event_labelButtAnadirAlPedidoMouseClicked
+
+    private void txtButtNuevoPedidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtNuevoPedidoMouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card6");
+        recetario = newrecetarioDAO.consultarRecetas();
+        agregarAlListado(jList8,concatenarListasHijas(recetario));
+        
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = now.format(formatter1);
+        
+        int numeroOrden = newordenVDAO.consultarOrdenVid()+1;
+        ordenv.setStatus("OPEN");
+        ordenv.setFechaEmision(formattedDateTime);
+        ordenv.setNumeroOrden(numeroOrden);
+        
+        
+    }//GEN-LAST:event_txtButtNuevoPedidoMouseClicked
+
+    private void textFCuantasRecetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFCuantasRecetasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFCuantasRecetasActionPerformed
+
+    private void txtIconNextArrow3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtIconNextArrow3MouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card7");
+        jTextField1.setText(String.valueOf(ctotalMPrima));
+        jTextField2.setText(String.valueOf(pedidoTiempoTrabajoTotal));
+        
+        //Calculo de Gastos en funcion del tiempo trabajado
+        Double montoGast_hs_TOTAL =0.0;
+        List<List<String>> gastosListado = newgastosDAO.consultarGastos();
+        List<String> gastoLista =  new ArrayList<String>();
+        for (List<String> gasto : gastosListado){
+            String conceptoGast = gasto.get(1);
+            Double montoGast = Double.parseDouble(gasto.get(2));
+            Double montoGast_hs = (montoGast/23.0)/8.0;
+            montoGast_hs_TOTAL = montoGast_hs_TOTAL + montoGast_hs;
+            String gasto_elementolista = conceptoGast+"-----> $ "+String.valueOf(montoGast_hs*pedidoTiempoTrabajoTotal);
+            gastoLista.add(gasto_elementolista);
+        } 
+        agregarAlListado(jList12,gastoLista);
+        jTextField3.setText(String.valueOf(montoGast_hs_TOTAL));
+    }//GEN-LAST:event_txtIconNextArrow3MouseClicked
+
+    private void txtButtToMainMenu8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu8MouseClicked
+        // TODO add your handling code here:
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card1");
+        
+    }//GEN-LAST:event_txtButtToMainMenu8MouseClicked
+
+    private void txtButtToMainMenu8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu8MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu8MouseEntered
+
+    private void txtButtToMainMenu8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu8MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu8MouseExited
+
+    private void labelButtCalcularCostoTotalPedidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtCalcularCostoTotalPedidoMouseClicked
+        // TODO add your handling code here:
+        Double ctotmprima = Double.parseDouble(this.jTextField1.getText());
+        Double ctotgastos = Double.parseDouble(this.jTextField3.getText());
+        jTextField4.setText(String.valueOf(ctotmprima+ctotgastos));
+    }//GEN-LAST:event_labelButtCalcularCostoTotalPedidoMouseClicked
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void txtButtConsGastosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsGastosMouseClicked
+        // TODO add your handling code here:
+        
+        List<List<String>> gastosListado = newgastosDAO.consultarGastos();
+        card = (CardLayout) this.background.getLayout();
+        card.show(background, "card9");
+        
+        //System.out.println(inventario.size());
+        addRowToTable(gastosListado,jTable2);
+    }//GEN-LAST:event_txtButtConsGastosMouseClicked
+
+    private void txtButtConsGastosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsGastosMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtConsGastosMouseEntered
+
+    private void txtButtConsGastosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtConsGastosMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtConsGastosMouseExited
+
+    private void txtButtToMainMenu9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu9MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu9MouseClicked
+
+    private void txtButtToMainMenu9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu9MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu9MouseEntered
+
+    private void txtButtToMainMenu9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtButtToMainMenu9MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtButtToMainMenu9MouseExited
+
+    private void textFGastoIDMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFGastoIDMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFGastoIDMousePressed
+
+    private void textFGastoIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFGastoIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFGastoIDActionPerformed
+
+    private void textFGastoConceptoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFGastoConceptoMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFGastoConceptoMousePressed
+
+    private void textFGastoConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFGastoConceptoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFGastoConceptoActionPerformed
+
+    private void textFGastoMontoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFGastoMontoMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFGastoMontoMousePressed
+
+    private void labelButtCargarElemento4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtCargarElemento4MouseClicked
+        // TODO add your handling code here:
+        labelButtCargarElemento4.setForeground(new java.awt.Color(23, 132, 21));
+        
+        
+        String id_gasto = this.textFGastoID.getText().toLowerCase();
+        String concepto_gasto = this.textFGastoConcepto.getText().toLowerCase();
+        String monto_gasto = this.textFGastoMonto.getText().toLowerCase();
+        
+        newgastos.setId(Integer.parseInt(id_gasto));
+        newgastos.setConcepto(concepto_gasto);
+        newgastos.setMonto(Double.parseDouble(monto_gasto));
+        
+        newgastosDAO.actualizInsertarGastos(newgastos);
+        List<List<String>> gastosListado = newgastosDAO.consultarGastos();
+        //jTable2.setModel(new DefaultTableModel());
+        limpiarTabla(jTable2);
+        addRowToTable(gastosListado,jTable2);
+        labelButtCargarElemento4.setForeground(new java.awt.Color(25, 118, 211));
+        
+        
+    }//GEN-LAST:event_labelButtCargarElemento4MouseClicked
+
+    private void labelButtGenerarFactura1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelButtGenerarFactura1MouseClicked
+        // TODO add your handling code here:
+        try {
+            OrdenVFIle.generarOrden(ordenv.getFechaEmision(),  String.format("%010d",ordenv.getNumeroOrden()) , ordenv.getObservaciones(), ordenv.getDetalleProductos());
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_labelButtGenerarFactura1MouseClicked
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
+
 
     
     
@@ -2351,36 +3952,85 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel card1CentralPanelContent2;
     private javax.swing.JPanel card1CentralPanelContent3;
     private javax.swing.JPanel cardPanelBajaProducto;
+    private javax.swing.JPanel cardPanelConsultGastos;
     private javax.swing.JPanel cardPanelConsultInvent;
     private javax.swing.JPanel cardPanelMainMenu;
+    private javax.swing.JPanel cardPanelNuevaReceta;
+    private javax.swing.JPanel cardPanelNuevoPedido;
+    private javax.swing.JPanel cardPanelNuevoPedido1;
     private javax.swing.JPanel cardPanelNvaOrdC1;
     private javax.swing.JPanel cardPanelNvaOrdC2;
     private javax.swing.JPanel cardPanelNvaOrdC3;
     private javax.swing.JPanel cardPanelNvaOrdC4;
+    private javax.swing.JComboBox<String> comboBoxTipo;
     private javax.swing.JComboBox<String> comboBoxUnidades;
     private javax.swing.JComboBox<String> comboBoxUnidades1;
+    private javax.swing.JComboBox<String> comboBoxUnidades2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jList10;
+    private javax.swing.JList<String> jList12;
+    private javax.swing.JList<String> jList13;
     private javax.swing.JList<String> jList2;
     private javax.swing.JList<String> jList3;
     private javax.swing.JList<String> jList4;
     private javax.swing.JList<String> jList5;
+    private javax.swing.JList<String> jList6;
+    private javax.swing.JList<String> jList7;
+    private javax.swing.JList<String> jList8;
+    private javax.swing.JList<String> jList9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel labelButtAnadirAlPedido;
     private javax.swing.JLabel labelButtBorrarElemento;
     private javax.swing.JLabel labelButtBorrarElemento1;
+    private javax.swing.JLabel labelButtBorrarElemento2;
+    private javax.swing.JLabel labelButtCalcularCostoTotalPedido;
     private javax.swing.JLabel labelButtCargarElemento;
     private javax.swing.JLabel labelButtCargarElemento1;
     private javax.swing.JLabel labelButtCargarElemento2;
+    private javax.swing.JLabel labelButtCargarElemento3;
+    private javax.swing.JLabel labelButtCargarElemento4;
     private javax.swing.JLabel labelButtCargarObservaciones;
+    private javax.swing.JPanel labelButtCargarReceta;
+    private javax.swing.JLabel labelButtCargarReceta1;
     private javax.swing.JPanel labelButtConfirmarCompra;
     private javax.swing.JLabel labelButtConfirmarCompra3;
     private javax.swing.JLabel labelButtDarDeBaja;
     private javax.swing.JLabel labelButtEditarElemento;
+    private javax.swing.JLabel labelButtGenerarFactura1;
+    private javax.swing.JLabel labelCantidadReceta;
     private javax.swing.JLabel labelConfirmacionGeneracionPDF;
+    private javax.swing.JLabel labelGastoConcepto;
+    private javax.swing.JLabel labelGastoID;
+    private javax.swing.JLabel labelGastoMonto;
     private javax.swing.JLabel labelGeneradoCorrectamente;
     private javax.swing.JLabel labelMatPrimaCantid;
     private javax.swing.JLabel labelMatPrimaCantid1;
@@ -2401,22 +4051,47 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel labelMatPrimaUnidades;
     private javax.swing.JLabel labelMatPrimaUnidades1;
     private javax.swing.JLabel labelMatPrimaUnidades2;
+    private javax.swing.JLabel labelNombreReceta;
     private javax.swing.JLabel labelObservacCargadasCorrectamente;
     private javax.swing.JLabel labelOrdenCPrecioTotal;
+    private javax.swing.JLabel labelSKU;
+    private javax.swing.JLabel labelTiempoPreparacion;
+    private javax.swing.JLabel labelTipoIngrediente;
+    private javax.swing.JLabel labelUnidadesReceta;
     private javax.swing.JScrollPane listOrdenCompra;
     private javax.swing.JScrollPane listOrdenCompra1;
+    private javax.swing.JScrollPane listOrdenCompra10;
+    private javax.swing.JScrollPane listOrdenCompra11;
     private javax.swing.JScrollPane listOrdenCompra2;
     private javax.swing.JScrollPane listOrdenCompra3;
+    private javax.swing.JScrollPane listOrdenCompra4;
+    private javax.swing.JScrollPane listOrdenCompra5;
+    private javax.swing.JScrollPane listOrdenCompra6;
+    private javax.swing.JScrollPane listOrdenCompra7;
+    private javax.swing.JScrollPane listOrdenCompra8;
     private javax.swing.JPanel mainMenuCentralPanelContent;
     private javax.swing.JPanel mainMenuCentralPanelContent1;
+    private javax.swing.JPanel mainMenuCentralPanelContent2;
     private javax.swing.JPanel nvaOrdC1CentralContentPanel;
     private javax.swing.JPanel nvaOrdC1CentralContentPanel1;
+    private javax.swing.JPanel nvaOrdC1CentralContentPanel2;
+    private javax.swing.JPanel nvaOrdC1CentralContentPanel3;
     private javax.swing.JPanel panelListOrdCompra;
     private javax.swing.JPanel panelListOrdCompra1;
     private javax.swing.JPanel panelListOrdCompra2;
+    private javax.swing.JPanel panelListOrdCompra3;
+    private javax.swing.JPanel panelListOrdCompra4;
+    private javax.swing.JPanel panelListOrdCompra5;
+    private javax.swing.JPanel panelListOrdCompra7;
     private javax.swing.JPanel panelOrdenC1BorrarElementoListado;
     private javax.swing.JPanel panelOrdenC1BorrarElementoListado1;
     private javax.swing.JPanel panelOrdenC1BorrarElementoListado2;
+    private javax.swing.JPanel panelOrdenC1BorrarElementoListado3;
+    private javax.swing.JTextField textFCantidadReceta;
+    private javax.swing.JTextField textFCuantasRecetas;
+    private javax.swing.JTextField textFGastoConcepto;
+    private javax.swing.JTextField textFGastoID;
+    private javax.swing.JTextField textFGastoMonto;
     private javax.swing.JTextField textFMatPrimaCantid;
     private javax.swing.JTextField textFMatPrimaCantid1;
     private javax.swing.JTextField textFMatPrimaCantid2;
@@ -2434,12 +4109,18 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JTextField textFMatPrimaTipo1;
     private javax.swing.JTextField textFMatPrimaTipo2;
     private javax.swing.JTextField textFMatPrimaUnid1;
+    private javax.swing.JTextField textFNombreReceta;
     private javax.swing.JTextField textFObservations;
     private javax.swing.JTextField textFOrdenCPrecioTotal;
+    private javax.swing.JTextField textFRecipiesDetail;
+    private javax.swing.JTextField textFSKU;
+    private javax.swing.JTextField textFTiempoPreparacion;
     private javax.swing.JLabel txtBienvenido;
     private javax.swing.JLabel txtButtBajaStock;
     private javax.swing.JLabel txtButtCargarRecetaNueva;
+    private javax.swing.JLabel txtButtConsGastos;
     private javax.swing.JLabel txtButtConsInvent;
+    private javax.swing.JLabel txtButtConsRecetas;
     private javax.swing.JLabel txtButtNuevoPedido;
     private javax.swing.JLabel txtButtNvaOrdenC;
     private javax.swing.JLabel txtButtToMainMenu;
@@ -2448,13 +4129,22 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel txtButtToMainMenu3;
     private javax.swing.JLabel txtButtToMainMenu4;
     private javax.swing.JLabel txtButtToMainMenu5;
+    private javax.swing.JLabel txtButtToMainMenu6;
+    private javax.swing.JLabel txtButtToMainMenu7;
+    private javax.swing.JLabel txtButtToMainMenu8;
+    private javax.swing.JLabel txtButtToMainMenu9;
     private javax.swing.JLabel txtIconNextArrow;
     private javax.swing.JLabel txtIconNextArrow1;
     private javax.swing.JLabel txtIconNextArrow2;
+    private javax.swing.JLabel txtIconNextArrow3;
     private javax.swing.JLabel txtPathOrdC1;
     private javax.swing.JLabel txtPathOrdC2;
     private javax.swing.JLabel txtPathOrdC3;
     private javax.swing.JLabel txtPathOrdC4;
+    private javax.swing.JLabel txtPathOrdC5;
+    private javax.swing.JLabel txtPathOrdC6;
+    private javax.swing.JLabel txtPathOrdC7;
+    private javax.swing.JLabel txtPathOrdC8;
     private javax.swing.JLabel txtPathOrdCDetalles1;
     private javax.swing.JLabel txtPathOrdCDetalles2;
     private javax.swing.JLabel txtSubtitleConfirmarCompra;
@@ -2526,7 +4216,7 @@ public class MainMenu extends javax.swing.JFrame {
         //eliminar elemento del listado
         DefaultListModel model = (DefaultListModel) jlista.getModel();
         int selectedIndex = jlista.getSelectedIndex();
-        System.out.println(selectedIndex);
+        //System.out.println(selectedIndex);
         if (selectedIndex != -1) {
             model.remove(selectedIndex);
             List<String> elemento = ordCDetalle.get(selectedIndex);
@@ -2561,13 +4251,206 @@ public class MainMenu extends javax.swing.JFrame {
         List<String> listaConcatenada = new ArrayList<>();
         for (List<String> listaHija : listaMadre) {
             // Utilizamos String.join() para concatenar los elementos de la lista hija
-            String cadenaConcatenada = String.join(" ", listaHija);
+            String cadenaConcatenada = String.join(" | ", listaHija);
             listaConcatenada.add(cadenaConcatenada); // Agregamos la cadena al final de la lista hija
-            System.out.println(listaConcatenada.size());
-            
+            //System.out.println(listaConcatenada.size()); 
         }
         return listaConcatenada;
     }
     
-     
+    
+    private List<String> concatenarListasHijas2(List<List<Object>> listaMadre) {
+        List<String> listaConcatenada = new ArrayList<>();
+        for (List<Object> listaHija : listaMadre) {
+            List<String> listaHijaStrings = new ArrayList<>(); 
+            for (Object elemento : listaHija) {
+                if (elemento instanceof Double) {
+                listaHijaStrings.add(String.valueOf(elemento));
+            } else {
+                listaHijaStrings.add(elemento.toString());
+            }
+        } 
+            // Utilizamos String.join() para concatenar los elementos de la lista hija
+            String cadenaConcatenada = String.join(" | ", listaHijaStrings);
+            listaConcatenada.add(cadenaConcatenada); // Agregamos la cadena al final de la lista hija
+            //System.out.println(listaConcatenada.size());
+
+        }
+        return listaConcatenada;
+
+    }
+
+    private List<String> seleccionarLaReceta(JList<String> jlista,List<String> lista, List<List<String>> recetario) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        DefaultListModel model = (DefaultListModel) jlista.getModel();
+        int selectedIndex = jlista.getSelectedIndex();
+        //System.out.println(selectedIndex);
+        List<String> retorno = new ArrayList<>();
+        if (selectedIndex != -1) {
+            //model.remove(selectedIndex);
+            String identificador = recetario.get(selectedIndex).get(0) ;
+            String elemento = recetario.get(selectedIndex).get(1);
+            String t_elaboracion = (String) recetario.get(selectedIndex).get(2);
+            //String elemento = lista.get(selectedIndex) ;
+            retorno.add(identificador);
+            retorno.add(elemento);
+            retorno.add(t_elaboracion);
+        }
+        return retorno;
+             
+    
+            //textFMatPrimaCateg1.setText(elemento.get(1));
+            //textFMatPrimaSubcateg1.setText(elemento.get(2));
+            //textFMatPrimaMarca1.setText(elemento.get(3));
+            //textFMatPrimaTipo1.setText(elemento.get(4));
+            //textFMatPrimaCantid1.setText(elemento.get(5));
+            //textFMatPrimaUnid1.setText(elemento.get(6));
+            //textFMatPrimaUnid1.setText(elemento.get(5));
+            //textFMatPrimaPrecioUnit1.setText(elemento.get(8)); 
+    }
+
+    private List<List<List<Object>>> verificarUnidades(List<List<Object>> lista_ingredientes, List<List<Object>> lista_ingredientes_stock) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<List<Object>> nva_lista_ingredientes = new ArrayList<>();
+        List<List<Object>> nva_lista_ingredientes_stock = new ArrayList<>();
+        
+        for (int i = 0; i < lista_ingredientes.size(); i++) { 
+            String unid_receta = (String) lista_ingredientes.get(i).get(2);
+            String unid_stock = (String) lista_ingredientes_stock.get(i).get(2);
+            
+            if (unid_receta.equals(unid_stock)) {
+                nva_lista_ingredientes.add(lista_ingredientes.get(i));
+                nva_lista_ingredientes_stock.add(lista_ingredientes_stock.get(i));
+            } else {
+                if (unid_receta.equals("kg.")  && unid_stock.equals("g.") ){
+                    List<Object> auxiliar = new ArrayList<>();
+                    String sku_rec = (String) lista_ingredientes.get(i).get(0); 
+                    Double cantid_rec = (Double) lista_ingredientes.get(i).get(1);
+                    cantid_rec = cantid_rec * 1000.0;
+                    String unidCant_rec = "g."; 
+                    auxiliar.add(sku_rec);
+                    auxiliar.add(cantid_rec);
+                    auxiliar.add(unidCant_rec);
+                    nva_lista_ingredientes.add(auxiliar);
+                    nva_lista_ingredientes_stock.add(lista_ingredientes_stock.get(i) );
+                }
+                if (unid_receta.equals("g.")  && unid_stock.equals("kg.")){
+                    List<Object> auxiliar = new ArrayList<>();
+                    String sku_rec = (String) lista_ingredientes.get(i).get(0); 
+                    Double cantid_rec = (Double) lista_ingredientes.get(i).get(1);
+                    cantid_rec = cantid_rec / 1000.0;
+                    String unidCant_rec = "kg."; 
+                    auxiliar.add(sku_rec);
+                    auxiliar.add(cantid_rec);
+                    auxiliar.add(unidCant_rec);
+                    nva_lista_ingredientes.add(auxiliar);
+                    nva_lista_ingredientes_stock.add(lista_ingredientes_stock.get(i) );
+                } 
+                if (unid_receta.equals("l.") && unid_stock.equals("ml.")){
+                    List<Object> auxiliar = new ArrayList<>();
+                    String sku_rec = (String) lista_ingredientes.get(i).get(0); 
+                    Double cantid_rec = (Double) lista_ingredientes.get(i).get(1);
+                    cantid_rec = cantid_rec * 1000.0;
+                    String unidCant_rec = "ml."; 
+                    auxiliar.add(sku_rec);
+                    auxiliar.add(cantid_rec);
+                    auxiliar.add(unidCant_rec);
+                    nva_lista_ingredientes.add(auxiliar);
+                    nva_lista_ingredientes_stock.add(lista_ingredientes_stock.get(i) );
+                }
+                if (unid_receta.equals("ml.") && unid_stock.equals("l.")){
+                    List<Object> auxiliar = new ArrayList<>();
+                    String sku_rec = (String) lista_ingredientes.get(i).get(0); 
+                    Double cantid_rec = (Double) lista_ingredientes.get(i).get(1);
+                    cantid_rec = cantid_rec / 1000.0;
+                    String unidCant_rec = "l."; 
+                    auxiliar.add(sku_rec);
+                    auxiliar.add(cantid_rec);
+                    auxiliar.add(unidCant_rec);
+                    nva_lista_ingredientes.add(auxiliar);
+                    nva_lista_ingredientes_stock.add(lista_ingredientes_stock.get(i) );
+                }
+            }
+        }
+        List<List<List<Object>>> listaMadre = new ArrayList<>();
+        listaMadre.add(nva_lista_ingredientes);
+        listaMadre.add(nva_lista_ingredientes_stock);
+        //System.out.println(listaMadre);
+        return listaMadre;
+    }
+
+    private Double agregarAlListado2(JList<String> jlista, List<List<Object>> lista_ingredientes, List<List<Object>> lista_ingredientes_stock) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Double costo_total_matprima = 0.0;
+        Double costo = 0.0;
+        DefaultListModel datos = new DefaultListModel();
+        
+
+        
+        String texto = "ERROR";
+        for (int i = 0; i < lista_ingredientes.size(); i++) {
+            String sku = (String) lista_ingredientes.get(i).get(0);
+            Double cantid_nece = (Double) lista_ingredientes.get(i).get(1);
+            String u_cantid_nece = (String) lista_ingredientes.get(i).get(2);
+            
+            
+            for (int j = 0; j < lista_ingredientes_stock.size(); j++){
+                String sku_stock = (String) lista_ingredientes_stock.get(j).get(0);
+                if(sku.equals(sku_stock)){
+                    Double cantid_disp = (Double) lista_ingredientes_stock.get(j).get(1);
+                    String u_cantid_disp = (String) lista_ingredientes_stock.get(j).get(2);
+                    costo = (Double) lista_ingredientes_stock.get(j).get(3);
+                    costo = costo*cantid_nece;
+                    if (cantid_nece > cantid_disp) {
+                        texto = "SKU: "+sku+"   |   "+String.valueOf(cantid_nece)+u_cantid_nece+" / "+String.valueOf(cantid_disp)+u_cantid_disp+"-----> Costo = $"+costo+"     | SE NECESITA COMPRAR MÁS";
+                    } else {
+                        texto = "SKU: "+sku+"   |   "+String.valueOf(cantid_nece)+u_cantid_nece+" / "+String.valueOf(cantid_disp)+u_cantid_disp+"-----> Costo = $"+costo+"     | HAY SUFICIENTE";
+                    }
+                }
+            }
+            
+            costo_total_matprima = costo_total_matprima + costo;
+            datos.addElement(texto);
+        }
+        datos.addElement("-------------------------------------------------------");
+        datos.addElement("Costo Total Materias Primas : $" + String.valueOf(costo_total_matprima));
+        jlista.setModel(datos);
+        return costo_total_matprima;
+    }
+
+    private Double TransformarUnidades(Double cant_x_cantped, String un_cant_ingr, String un) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (un_cant_ingr.equals("kg.") && un.equals("g.")){
+            cant_x_cantped = cant_x_cantped * 1000.0;
+        }
+        
+        if (un_cant_ingr.equals("g.") && un.equals("kg.")){
+            cant_x_cantped = cant_x_cantped / 1000.0;
+        }
+        
+        if (un_cant_ingr.equals("l.") && un.equals("ml.")){
+            cant_x_cantped = cant_x_cantped * 1000.0;
+        }
+        
+        if (un_cant_ingr.equals("ml.") && un.equals("l.")){
+            cant_x_cantped = cant_x_cantped / 1000.0;
+        }
+        
+        return cant_x_cantped;
+    }
+
+    private void limpiarTabla(JTable jtabla) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        for (int i = 0; i < jtabla.getRowCount(); i++) {
+            DefaultTableModel dtm = (DefaultTableModel) jtabla.getModel();
+            dtm.setRowCount(0);
+            //dtm.removeRow(i);
+
+             //.removeRow(i);
+            i--; // Ajustamos el índice para evitar errores
+        }
+    }
+    
+
 }
