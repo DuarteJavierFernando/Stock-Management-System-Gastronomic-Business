@@ -131,4 +131,45 @@ public class OrdenVDAO {
         } 
     }
     
+    
+    
+    public void actualizMasterMatPrimas(List<List<Object>> lista_madre){
+        PreparedStatement ps = null;
+        try {
+            for (List<Object> lista_hija : lista_madre) {
+            //ps = cx.conectar().prepareStatement("INSERT INTO OrdenesCompra VALUES (?,?,?,?,?,?,?,?);");
+            String sku = (String) lista_hija.get(0);
+            Double cant = (Double) lista_hija.get(1);
+            ps = cx.conectar().prepareStatement("INSERT INTO MasterMateriasPrimas (sku,cantidad) VALUES (?,?) ON CONFLICT (sku) DO UPDATE SET cantidad = MasterMateriasPrimas.cantidad - excluded.cantidad;");
+            ps.setString(1,sku ); //sku
+            ps.setDouble(2,cant ); //cantidad
+            //ps.setString(3,producto.get(2) ); //subcategoria
+            //ps.setString(4,producto.get(3) ); //marca
+            //ps.setString(5,producto.get(4) ); //tipo   
+            //ps.setDouble(6,Double.parseDouble(producto.get(5)) ); //cantidad
+            //ps.setString(7,producto.get(6) ); //unidad camtidad
+            ps.execute();
+            //ps.executeUpdate();
+            }
+            //System.out.println("CargaExitosa");
+            cx.desconectar();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrdenVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void insertarOrdenV(OrdenVenta ordenV){
+        PreparedStatement ps = null;
+        try {
+            ps = cx.conectar().prepareStatement("INSERT INTO OrdenesCompra VALUES (null,?,?);");
+            ps.setString(1, ordenV.getFechaEmision());
+            ps.setDouble(2, ordenV.getPrecioTotal());
+            ps.executeUpdate();
+            //System.out.println("CargaExitosa");
+            cx.desconectar();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrdenVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }
